@@ -6,12 +6,14 @@ using System.Data.Entity;
 
 namespace DALContext
 {
-    [DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
+    //[DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
+    [DbConfigurationType(typeof(EFDbConfiguration))]
     public class TmcDataContext : DbContext
     {
 
         public TmcDataContext() : base("TMC145")
         {
+            DbConfiguration.SetConfiguration(new EFDbConfiguration(ConnectionFactory.DBType.MySql));
         }
 
         public TmcDataContext(string connectionString) : base(connectionString)
@@ -34,12 +36,15 @@ namespace DALContext
 
     }
 
-   // [DbConfigurationType(typeof(System.Data.Entity.DbConfiguration))]
+    
+    
     public class EtzbkDataContext : DbContext
     {
 
         public EtzbkDataContext() : base("ETZBK130")
         {
+            DbConfiguration.SetConfiguration(new EFDbConfiguration(ConnectionFactory.DBType.SQLServer));
+           // Database.SetInitializer(new MigrateDatabaseToLatestVersion<SistemaContext, Sistema.DataAccess.Migrations.Configuration>());
         }
 
         public EtzbkDataContext(string connectionString) : base(connectionString)
@@ -54,6 +59,15 @@ namespace DALContext
 
             modelBuilder.Entity<E_TRANSACTION>().Property(x => x.TRANS_AMOUNT).HasPrecision(18, 2);
             modelBuilder.Entity<E_TRANSACTION>().Property(x => x.FEE).HasPrecision(18, 2);
+        }
+    }
+
+    public class ConnectionFactory
+    {
+        public enum DBType
+        {
+            MySql, SQLServer, Sybase
+
         }
     }
 

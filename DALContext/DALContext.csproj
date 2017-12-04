@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataContexts.cs" />
+    <Compile Include="EFDbConfiguration.cs" />
     <Compile Include="Migrations\201712031030367_EtzbkData.cs" />
     <Compile Include="Migrations\201712031030367_EtzbkData.Designer.cs">
       <DependentUpon>201712031030367_EtzbkData.cs</DependentUpon>
