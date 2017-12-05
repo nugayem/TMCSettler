@@ -76,7 +76,9 @@
     <Compile Include="BaseContainer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CardloadProducer.cs" />
     <Compile Include="Services\EtranzactChannelTransaction.cs" />
+    <Compile Include="Services\FeeProcessing.cs" />
     <Compile Include="Services\MastercardTransactions.cs" />
     <Compile Include="Services\NonEtzCardTransaction.cs" />
     <Compile Include="Services\ProducerWork.cs" />

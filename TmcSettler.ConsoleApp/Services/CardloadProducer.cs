@@ -9,22 +9,26 @@ using System.Threading.Tasks;
 
 namespace TmcSettler.ConsoleApp.Services
 {
-    public class ProducerWork
+    public class CardloadProducer
     {
+
         private static BlockingCollection<E_TRANSACTION> enqueData;//= new BlockingCollection<E_Transaction>();
 
-            List<E_TRANSACTION> itemsToRemove = new List<E_TRANSACTION>();
-        private static void Producer()
+        List<E_TRANSACTION> itemsToRemove = new List<E_TRANSACTION>();
 
+        public void Run()
         {
+            Task t1 = Task.Factory.StartNew(CardLoad);
+        }
 
+        public void CardLoad()
+        {
             EtzbkDataContext db = new EtzbkDataContext();
+            var etzTrx = db.E_TRANSACTION.Where(a => a.TRANS_CODE == "D").ToList();
 
-            var etzTrx = db.E_TRANSACTION.ToList();
 
             Parallel.ForEach(etzTrx, item =>
             {
-                // Check TMC if transaction has been reversed.    
 
                 bool successful = CheckTransactionStatusOnTMC(item.UNIQUE_TRANSID, item.TRANS_CODE);
 
@@ -37,42 +41,14 @@ namespace TmcSettler.ConsoleApp.Services
                     itemsToRemove.Add(item);
                 }
             });
-
-            db.E_TRANSACTION.RemoveRange(itemsToRemove);
-
-
         }
 
-        private static void Consumer()
-
+        private static bool CheckTransactionStatusOnTMC(string UNIQUE_TRANSID, string TRANS_CODE)
         {
-
-            foreach (var item in enqueData.GetConsumingEnumerable())
-
-            {
-
-                Console.WriteLine(item);
-
-            }
-
-        }
-
-
-        private static bool  CheckTransactionStatusOnTMC(string UNIQUE_TRANSID, string TRANS_CODE)
-        {
-            bool value = false;
+            bool value = true;
 
             return value;
 
         }
-        
-        public void SplitCardLoad_D_Transaction(E_TRANSACTION entity)
-        {
-
-            var 
-        }
-
-      
-            
     }
 }
