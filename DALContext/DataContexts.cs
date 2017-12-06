@@ -53,6 +53,9 @@ namespace DALContext
         }
 
         public DbSet<E_TRANSACTION> E_TRANSACTION { get; set; }
+        public DbSet<E_CARDLOAD_COMMISSION_SPLIT> E_CARDLOAD_COMMISSION_SPLIT { get; set; }
+
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

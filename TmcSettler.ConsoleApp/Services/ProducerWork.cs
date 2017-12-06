@@ -12,8 +12,8 @@ namespace TmcSettler.ConsoleApp.Services
     public class ProducerWork
     {
         private static BlockingCollection<E_TRANSACTION> enqueData;//= new BlockingCollection<E_Transaction>();
+        private static List<E_TRANSACTION> itemsToRemove = new List<E_TRANSACTION>();
 
-            List<E_TRANSACTION> itemsToRemove = new List<E_TRANSACTION>();
         private static void Producer()
 
         {
@@ -69,7 +69,7 @@ namespace TmcSettler.ConsoleApp.Services
         public void SplitCardLoad_D_Transaction(E_TRANSACTION entity)
         {
 
-            var 
+            //var 
         }
 
       

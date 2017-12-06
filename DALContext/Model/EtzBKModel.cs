@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,7 +53,8 @@ namespace DALContext.Model
         public string SPLIT_CARD { get; set; }
         public decimal RATIO { get; set; }
 
-        [MaxLength(6)]
+        [Column(TypeName = "char")]
+        [MaxLength(1)]
         public string AGENT { get; set; }
 
         [MaxLength(50)]
@@ -60,7 +62,9 @@ namespace DALContext.Model
 
         [MaxLength(10)]
         public string COMM_SUSPENCE { get; set; }
-        
+
+        [Column(TypeName = "char")]
+        [MaxLength(1)]
         public int MAIN_FLAG { get; set; }
         public DateTime CREATED { get; set; } = DateTime.Now;
 

@@ -18,10 +18,10 @@ namespace TmcSettler.ConsoleApp.Services
 
         public void Run()
         {
-            Task t1 = Task.Factory.StartNew(CardLoad);
+            Task t1 = Task.Factory.StartNew(Producer);
         }
 
-        public void CardLoad()
+        private void Producer()
         {
             EtzbkDataContext db = new EtzbkDataContext();
             var etzTrx = db.E_TRANSACTION.Where(a => a.TRANS_CODE == "D").ToList();
@@ -41,7 +41,27 @@ namespace TmcSettler.ConsoleApp.Services
                     itemsToRemove.Add(item);
                 }
             });
+
+            enqueData.CompleteAdding();
+
         }
+
+
+        private static void Consumer()
+
+        {
+
+            foreach (var item in enqueData.GetConsumingEnumerable())
+
+            {
+
+                FeeProcessing.
+
+            }
+
+        }
+
+
 
         private static bool CheckTransactionStatusOnTMC(string UNIQUE_TRANSID, string TRANS_CODE)
         {
