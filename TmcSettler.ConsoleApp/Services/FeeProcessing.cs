@@ -59,5 +59,15 @@ namespace TmcSettler.ConsoleApp.Services
 
             return fee;
         }
+
+        public void CalCulateCardLoadFee(double amount)
+        {
+
+            double fee = decimal.Round(amount, 2, MidpointRounding.AwayFromZero);
+
+            foreach( item in )
+            
+
+        }
     }
 }

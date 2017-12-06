@@ -41,4 +41,29 @@ namespace DALContext.Model
         public string SOURCE_IDENTIFIER { get; set; }
 
     }
+
+    public class E_CARDLOAD_COMMISSION_SPLIT
+    {
+        [Key]
+        public int KEYID { get; set; }
+        [MaxLength(6)]
+        public string BANK_CODE { get; set; }
+        [MaxLength(10)]
+        public string SPLIT_CARD { get; set; }
+        public decimal RATIO { get; set; }
+
+        [MaxLength(6)]
+        public string AGENT { get; set; }
+
+        [MaxLength(50)]
+        public string SPLIT_DESCR { get; set; }
+
+        [MaxLength(10)]
+        public string COMM_SUSPENCE { get; set; }
+        
+        public int MAIN_FLAG { get; set; }
+        public DateTime CREATED { get; set; } = DateTime.Now;
+
+
+    }
 }
