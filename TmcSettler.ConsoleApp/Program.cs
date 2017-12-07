@@ -63,6 +63,7 @@ namespace TmcSettler.ConsoleApp
         int number_of_record_perround = int.Parse(ConfigurationManager.AppSettings["number_of_record_perround"]);
         int number_of_backlogdays = int.Parse(ConfigurationManager.AppSettings["number_of_record_round"]);
         string[] successKeys = new string[] { "00", "000" };
+         
 
         DateTime startdate;//= DateTime.Today.AddDays(-number_of_backlogdays);
 
@@ -70,6 +71,11 @@ namespace TmcSettler.ConsoleApp
         {
             this.logger = logger;
             this.startdate = DateTime.Today.AddDays(-number_of_backlogdays);
+
+
+            EtzbkDataContext etzbk = new EtzbkDataContext();
+
+            Settings.LoadSettings();
         }
 
         public void Run()

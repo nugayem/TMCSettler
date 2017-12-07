@@ -1,4 +1,5 @@
 ﻿using DALContext;
+using DALContext.Model;
 using LoggerHelper.Services;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace TmcSettler.ConsoleApp.Services
 {
-    public class Settings 
+    public static class Settings 
     {
         public static readonly int number_of_record_perround;
         public static readonly int number_of_backlogdays;
@@ -22,16 +23,23 @@ namespace TmcSettler.ConsoleApp.Services
             startdate = DateTime.Today.AddDays(-Settings.number_of_backlogdays);
         }
 
-
-    public void LoadCardLoadSplit()
+        public static void LoadSettings()
         {
-            EtzbkDataContext db = new EtzbkDataContext();
-            var etzTrx = db.E_CARDLOAD_COMMISSION_SPLIT.ToList();
-
-            CachingProvider cache= new CachingProvider(new Logger());
-            cache.AddItem("Cardload_Split", etzTrx);
+            EtzbkDataContext etzTrx = new EtzbkDataContext();
+            // var etzTrx = db.E_CARDLOAD_COMMISSION_SPLIT.ToList();
+            List<E_CARDLOAD_COMMISSION_SPLIT> cardLoadSplitList = new List<E_CARDLOAD_COMMISSION_SPLIT>()
+            {
+                new E_CARDLOAD_COMMISSION_SPLIT(){BANK_CODE="011", CREATED=DateTime.Now, MAIN_FLAG=0, RATIO=40, SPLIT_CARD="%9999", SPLIT_DESCR="Bank Commission"},
+                new E_CARDLOAD_COMMISSION_SPLIT (){ BANK_CODE = "011", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 60, SPLIT_CARD = "0441234567", SPLIT_DESCR = "Bank Commission" },
+                new E_CARDLOAD_COMMISSION_SPLIT (){ BANK_CODE = "033", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 30, SPLIT_CARD = "%9999", SPLIT_DESCR = "Bank Commission" },
+                new E_CARDLOAD_COMMISSION_SPLIT (){ BANK_CODE = "033", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 70, SPLIT_CARD = "0441234567", SPLIT_DESCR = "Bank Commission" },
+                new E_CARDLOAD_COMMISSION_SPLIT (){ BANK_CODE = "000", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 50, SPLIT_CARD = "%9999", SPLIT_DESCR = "Bank Commission" },
+                new E_CARDLOAD_COMMISSION_SPLIT (){ BANK_CODE = "000", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 50, SPLIT_CARD = "0441234567", SPLIT_DESCR = "Bank Commission" }
+            };
 
             
+            CachingProvider.AddItem("CardLoad", cardLoadSplitList);
+
 
         }
     }

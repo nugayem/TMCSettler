@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.Caching;
 using System.Text;
@@ -13,18 +14,18 @@ namespace LoggerHelper.Services
         object GetItem(string key);
     }
 
-    public class CachingProvider 
+    public static class CachingProvider 
     {
-        private readonly ILogger logger;
-        public MemoryCache cache = new MemoryCache("CachingProvider");
+        private static readonly ILogger logger;
+        public static  MemoryCache cache = new MemoryCache("CachingProvider");
 
         static readonly object padlock = new object();
-        public CachingProvider(ILogger logger)
-        {
-            this.logger = logger;
-        }
+        //public CachingProvider(ILogger logger)
+        //{
+        //    this.logger = logger;
+        //}
 
-        public virtual void AddItem(string key, object value)
+        public static  void AddItem(string key, object value)
         {
             lock (padlock)
             {
@@ -32,7 +33,7 @@ namespace LoggerHelper.Services
             }
         }
 
-        public virtual void RemoveItem(string key)
+        public static void RemoveItem(string key)
         {
             lock (padlock)
             {
@@ -40,7 +41,7 @@ namespace LoggerHelper.Services
             }
         }
 
-        public virtual object GetItem(string key, bool remove)
+        public static T  GetCachedData<T>(string key, bool remove = false)
         {
             lock (padlock)
             {
@@ -56,8 +57,55 @@ namespace LoggerHelper.Services
                     logger.LogFatalMessage("CachingProvider-GetItem: Don't contains key: " + key);
                 }
 
-                return res;
+                return (T)res;
             }
+        }
+
+    }
+
+    public class TypedObjectCache<T> : MemoryCache where T : class
+    {
+        private CacheItemPolicy HardDefaultCacheItemPolicy = new CacheItemPolicy()
+        {
+            SlidingExpiration = new TimeSpan(0, 15, 0)
+        };
+
+        private CacheItemPolicy defaultCacheItemPolicy;
+
+        public TypedObjectCache(string name, NameValueCollection nvc = null, CacheItemPolicy policy = null) : base(name, nvc)
+        {
+            defaultCacheItemPolicy = policy ?? HardDefaultCacheItemPolicy;
+        }
+
+        public void Set(string cacheKey, T cacheItem, CacheItemPolicy policy = null)
+        {
+            policy = policy ?? defaultCacheItemPolicy;
+            if (true /* Ektron.Com.Helpers.Constants.IsCachingEnabled */ )
+            {
+                base.Set(cacheKey, cacheItem, policy);
+            }
+        }
+
+        public void Set(string cacheKey, Func<T> getData, CacheItemPolicy policy = null)
+        {
+            this.Set(cacheKey, getData(), policy);
+        }
+
+        public bool TryGetAndSet(string cacheKey, Func<T> getData, out T returnData, CacheItemPolicy policy = null)
+        {
+            if (TryGet(cacheKey, out returnData))
+            {
+                return true;
+            }
+            returnData = getData();
+            this.Set(cacheKey, returnData, policy);
+            return returnData != null;
+        }
+
+        public bool TryGet(string cacheKey, out T returnItem)
+        {
+            returnItem = (T)this[cacheKey];
+            return returnItem != null;
         }
 
     }

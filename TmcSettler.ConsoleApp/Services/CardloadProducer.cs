@@ -1,5 +1,6 @@
 ﻿using DALContext;
 using DALContext.Model;
+using LoggerHelper.Services;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace TmcSettler.ConsoleApp.Services
 {
     public class CardloadProducer
     {
+
 
         private static BlockingCollection<E_TRANSACTION> enqueData;//= new BlockingCollection<E_Transaction>();
 
@@ -50,12 +52,14 @@ namespace TmcSettler.ConsoleApp.Services
         private static void Consumer()
 
         {
+            List<E_CARDLOAD_COMMISSION_SPLIT> splitFormular =CachingProvider.GetCachedData<List<E_CARDLOAD_COMMISSION_SPLIT>>("CardLoad");
+
 
             foreach (var item in enqueData.GetConsumingEnumerable())
-
             {
 
-                //FeeProcessing.
+                List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();
+                FeeProcessing.ProcessCardloadSplit(item, splitFormular);
 
             }
 

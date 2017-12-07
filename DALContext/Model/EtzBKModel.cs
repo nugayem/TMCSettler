@@ -35,11 +35,161 @@ namespace DALContext.Model
         public decimal FEE { get; set; }
         public string CURRENCY { get; set; }
         public string SBATCH_NO { get; set; }
-        public char FEE_BATCH { get; set; }
+        public string FEE_BATCH { get; set; }
         public char SETTLE_BATCH { get; set; }
         public string TRACK2 { get; set; }
         public string TRANS_CHECK { get; set; }
         public string SOURCE_IDENTIFIER { get; set; }
+
+    }
+
+    public class E_SETTLEMENT_DOWNLOAD_BK
+    {
+        [Key]
+        public int GLOBALID { get; set; }
+        [MaxLength(17)]
+        public int TRANSID { get; set; }
+        [MaxLength(20)]
+        public string CARD_NUM { get; set; }
+        [MaxLength(30)]
+        public string TRANS_NO { get; set; }
+        
+        public DateTime TRANS_DATE { get; set; }
+        [MaxLength(200)]
+        public string TRANS_DESCR { get; set; }
+        
+        public decimal TRANS_AMOUNT { get; set; }
+        [MaxLength(1)]
+        public string TRANS_TYPE { get; set; }
+        [MaxLength(1)]
+        public string TRANS_CODE { get; set; }
+        [MaxLength(20)]
+        public string MERCHANT_CODE { get; set; }
+        [MaxLength(1)]
+        [Column(TypeName = "char")]
+        public string CLOSED { get; set; }
+        [MaxLength(20)]
+        public string TRANS_REF { get; set; }
+        [MaxLength(50)]
+        public string EXTERNAL_TRANSID { get; set; }
+        [MaxLength(50)]
+        public string UNIQUE_TRANSID { get; set; }
+        [MaxLength(1)]
+        [Column(TypeName = "char")]
+        public char REP_STATUS { get; set; }
+        [MaxLength(1)]
+        [Column(TypeName = "char")]
+        public char INTSTATUS { get; set; }
+        [MaxLength(6)]
+        public decimal SBATCHID { get; set; }
+        [MaxLength(1)]
+        [Column(TypeName = "char")]
+        public char RECALC_BAL { get; set; }
+        [MaxLength(40)]
+        public string SERVICEID { get; set; }
+        [MaxLength(2)]
+        [Column(TypeName = "char")]
+        public char CHANNELID { get; set; }
+        [MaxLength(2)]
+        [Column(TypeName = "char")]
+        public char PROCESS_STATUS { get; set; }
+        [MaxLength(9)]
+        public decimal FEE { get; set; }
+        [MaxLength(3)]
+        public string CURRENCY { get; set; }
+        [MaxLength(15)]
+        public string SBATCH_NO { get; set; }
+        [MaxLength(20)]
+        public string FEE_BATCH { get; set; }
+        [MaxLength(20)]
+        public char SETTLE_BATCH { get; set; }
+        [MaxLength(30)]
+        public char CARD_NUM_ACCT { get; set; }
+        [MaxLength(30)]
+        public char MERCHANT_CODE_ACCT { get; set; }
+        [MaxLength(1)]
+        [Column(TypeName = "char")]
+        public char GFLAG { get; set; }
+        [MaxLength(17)]
+        public decimal SOURCE_REF { get; set; }
+        [MaxLength(17)]
+        public decimal DEST_REF { get; set; }
+        [MaxLength(15)]
+        public string SBATCH_NO_BK { get; set; }
+        [MaxLength(9)]
+        public decimal SWITCH_FEE { get; set; }
+        [MaxLength(9)]
+        public decimal BANK_FEE { get; set; }
+        [MaxLength(25)]
+        public string TRACK2 { get; set; }
+
+    }
+
+    public class E_FEE_DETAIL_BK
+    {
+        [Key]
+        public int GLOBALID { get; set; }
+        public int TRANSID { get; set; }
+        [MaxLength(20)]
+        public string CARD_NUM { get; set; }
+        [MaxLength(30)]
+        public string TRANS_NO { get; set; }
+        public DateTime TRANS_DATE { get; set; }
+        [MaxLength(200)]
+        public string TRANS_DESCR { get; set; }
+        [MaxLength(9)]
+        public decimal TRANS_AMOUNT { get; set; }
+        [MaxLength(1)]
+        public string TRANS_TYPE { get; set; }
+        [MaxLength(1)]
+        public string TRANS_CODE { get; set; }
+        [MaxLength(20)]
+        public string MERCHANT_CODE { get; set; }
+        [MaxLength(1)]
+        public string CLOSED { get; set; }
+        [MaxLength(20)]
+        public string TRANS_REF { get; set; }
+        [MaxLength(50)]
+        public string EXTERNAL_TRANSID { get; set; }
+        [MaxLength(50)]
+        public string UNIQUE_TRANSID { get; set; }
+        [MaxLength(1)]
+        [Column(TypeName = "char")]
+        public char REP_STATUS { get; set; }
+        [MaxLength(1)]
+        [Column(TypeName = "char")]
+        public char INTSTATUS { get; set; }
+        public decimal SBATCHID { get; set; }
+        [MaxLength(1)]
+        [Column(TypeName = "char")]
+        public char RECALC_BAL { get; set; }
+        [MaxLength(40)]
+        public string SERVICEID { get; set; }
+        [MaxLength(2)]
+        [Column(TypeName = "char")]
+        public char CHANNELID { get; set; }
+        [MaxLength(2)]
+        [Column(TypeName = "char")]
+        public char PROCESS_STATUS { get; set; }
+        public decimal FEE { get; set; }
+        [MaxLength(3)]
+        public string CURRENCY { get; set; }
+        [MaxLength(15)]
+        public string SBATCH_NO { get; set; }
+        [MaxLength(20)]
+        public string FEE_BATCH { get; set; }
+        [MaxLength(20)]
+        [Column(TypeName = "char")]
+        public char SETTLE_BATCH { get; set; }
+        [MaxLength(1)]
+        [Column(TypeName = "char")]
+        public char GFLAG { get; set; }
+        [MaxLength(3)]
+        public string ISSUER_CODE { get; set; }
+        [MaxLength(3)]
+        public string SUB_CODE { get; set; }
+        [MaxLength(20)]
+        public string ORIGL_SETTLE_BATCH { get; set; }
 
     }
 
