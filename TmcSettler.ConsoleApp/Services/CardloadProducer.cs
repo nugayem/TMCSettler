@@ -55,7 +55,7 @@ namespace TmcSettler.ConsoleApp.Services
 
             {
 
-                FeeProcessing.
+                //FeeProcessing.
 
             }
 

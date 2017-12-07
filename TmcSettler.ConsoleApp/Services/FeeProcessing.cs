@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DALContext;
+using DALContext.Model;
 
 namespace TmcSettler.ConsoleApp.Services
 {
@@ -12,8 +14,89 @@ namespace TmcSettler.ConsoleApp.Services
 
 
     }
-    public static class FeeProcessing
+    public  class FeeProcessing
     {
+
+        public decimal CalculateFeeBeneficiary( decimal ratio , decimal TrnxFee)
+        {
+            decimal fee = 0;
+
+            fee = (ratio / 100) * TrnxFee;
+            
+            return fee;
+
+
+        }
+        public void splitCardLoad(E_TRANSACTION e_transaction, List<E_CARDLOAD_COMMISSION_SPLIT> splitFormular)
+        {
+            if (e_transaction == null)
+            {
+                throw new ArgumentNullException(nameof(e_transaction));
+            }
+            else
+            {
+
+                string bankCode = e_transaction.CARD_NUM.Substring(1, 3);
+
+                var items = from card in splitFormular
+                            where card.BANK_CODE == bankCode
+                            select card;
+
+                if(items.Count() > 0)
+                {
+                    foreach(var item in items)
+                    {
+                        decimal fee = CalculateFeeBeneficiary(item.RATIO, e_transaction.FEE);
+                         
+                        //Compute E_feeDetail Value
+                        if(item.COMM_SUSPENCE==null | item.COMM_SUSPENCE.Trim() == "")
+                        {
+
+                        }
+
+                        E_TRANSACTION eff_Detail = new E_TRANSACTION() { CARD_NUM= item.COMM_SUSPENCE==null || item.COMM_SUSPENCE.Trim() == "" ? bankCode + ChannelAlias.GetChannelAlias(e_transaction.CHANNELID)+ "9999", CHANNELID=item.ch };
+
+                       
+
+                    }
+                }
+                else
+                {
+                    items = splitFormular.Where(def => def.BANK_CODE == "000");
+                    foreach (var item in items)
+                    {
+                        decimal fee = CalculateFeeBeneficiary(item.RATIO, e_transaction.FEE);
+                    }
+
+                }
+                
+
+            }
+        }
+
+        public void splittrx(E_TRANSACTION e_transaction, List<E_CARDLOAD_COMMISSION_SPLIT> splitFormular)
+        {
+            if (e_transaction == null)
+            {
+                throw new ArgumentNullException(nameof(e_transaction));
+            }
+            else
+            {
+                string feeCardNum;
+                string feeMerchantCode;
+                decimal feeTransAmount;
+
+
+                foreach (var cardLoadSplit in splitFormular)
+                {
+                    if (cardLoadSplit.SPLIT_CARD == "0")
+                    {
+
+                    }
+                }
+
+            }
+        }
 
         //public double getCalcFee(double amount)
         //{
@@ -72,8 +155,39 @@ namespace TmcSettler.ConsoleApp.Services
         //    double fee = decimal.Round(amount, 2, MidpointRounding.AwayFromZero);
 
         //    foreach( item in )
-            
+
 
         //}
+    }
+
+
+    public static class ChannelAlias
+    {
+        
+        public static string GetChannelAlias(string channelCode)
+        {
+            string value = "";
+            switch (channelCode)
+            {
+                case "01":
+                    value = "WEB";
+                    break;
+                case "02":
+                    value = "MOB";
+                    break;
+                case "03":
+                    value = "POS";
+                    break;
+                case "04":
+                    value = "OUT";
+                    break;
+                case "05":
+                    value = "OUT";
+                    break;
+
+            }
+
+            return value;
+        }
     }
 }
