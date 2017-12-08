@@ -51,7 +51,7 @@ namespace DALContext
         {
             Database.Connection.ConnectionString = connectionString;
         }
-
+        
         public DbSet<E_TRANSACTION> E_TRANSACTION { get; set; }
         public DbSet<E_CARDLOAD_COMMISSION_SPLIT> E_CARDLOAD_COMMISSION_SPLIT { get; set; }
 

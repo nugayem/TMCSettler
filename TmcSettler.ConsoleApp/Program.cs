@@ -116,6 +116,14 @@ namespace TmcSettler.ConsoleApp
             stopwatch.Stop();
 
 
+            logger.LogInfoMessage(nameof(TmcSettler) + "Instantiating MastercardTransactions  Threads ");
+            CardloadProducer cardloadProducer = new CardloadProducer();
+            Thread cardloadProducerThread = new Thread(new ThreadStart(cardloadProducer.Run));
+            logger.LogInfoMessage(nameof(TmcSettler) + "Starting the cardloadProducer  Threads ");
+            cardloadProducerThread.Start();
+
+            
+
 
             Console.WriteLine("Round completed in "+ stopwatch.Elapsed);
             Console.ReadLine();

@@ -20,7 +20,12 @@ namespace TmcSettler.ConsoleApp.Services
 
         public void Run()
         {
+            enqueData = new BlockingCollection<E_TRANSACTION>();
             Task t1 = Task.Factory.StartNew(Producer);
+            Task t2 = Task.Factory.StartNew(Consumer);
+
+            List<Task> taskList = new List<Task> { t1, t2};
+            Task.WaitAll(taskList.ToArray());
         }
 
         private void Producer()
@@ -37,6 +42,7 @@ namespace TmcSettler.ConsoleApp.Services
                 if (successful)
                 {
                     enqueData.Add(item);
+                    Console.WriteLine("Equeued Data" + item.UNIQUE_TRANSID); 
                 }
                 else
                 {
@@ -49,7 +55,7 @@ namespace TmcSettler.ConsoleApp.Services
         }
 
 
-        private static void Consumer()
+        private  void Consumer()
 
         {
             List<E_CARDLOAD_COMMISSION_SPLIT> splitFormular =CachingProvider.GetCachedData<List<E_CARDLOAD_COMMISSION_SPLIT>>("CardLoad");
@@ -70,7 +76,7 @@ namespace TmcSettler.ConsoleApp.Services
         private static bool CheckTransactionStatusOnTMC(string UNIQUE_TRANSID, string TRANS_CODE)
         {
             bool value = true;
-
+            Console.WriteLine("Checking Transaction" + UNIQUE_TRANSID);
             return value;
 
         }

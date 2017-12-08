@@ -59,11 +59,6 @@
   <ItemGroup>
     <Compile Include="DataContexts.cs" />
     <Compile Include="EFDbConfiguration.cs" />
-    <Compile Include="Migrations\201712031030367_EtzbkData.cs" />
-    <Compile Include="Migrations\201712031030367_EtzbkData.Designer.cs">
-      <DependentUpon>201712031030367_EtzbkData.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\EtzBKModel.cs" />
     <Compile Include="Model\EtzBKViewModel.cs" />
     <Compile Include="Model\TmcModel.cs" />
@@ -76,11 +71,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201712031030367_EtzbkData.resx">
-      <DependentUpon>201712031030367_EtzbkData.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -36,8 +36,8 @@ namespace TmcSettler.ConsoleApp.Services
             }
             else
             {
-
-                string bankCode = e_transaction.CARD_NUM.Substring(1, 3);
+                int i = 1;
+                string bankCode = e_transaction.CARD_NUM.Substring(0, 3);
 
                 var items = from card in splitFormular
                             where card.BANK_CODE == bankCode
@@ -48,7 +48,7 @@ namespace TmcSettler.ConsoleApp.Services
                 foreach (var item in items)
                 {
                     decimal fee = CalculateFeeBeneficiary(item.RATIO, e_transaction.FEE);
-                    int i = 1;
+                  
                     E_FEE_DETAIL_BK feeDetail = new E_FEE_DETAIL_BK()
                     {
                         CARD_NUM = item.COMM_SUSPENCE == null || item.COMM_SUSPENCE.Trim() == "" ? bankCode + ChannelAlias.GetChannelAlias(e_transaction.CHANNELID.ToString()) + "9999" : item.COMM_SUSPENCE,
@@ -59,13 +59,13 @@ namespace TmcSettler.ConsoleApp.Services
                         UNIQUE_TRANSID = "C" + i.ToString() + e_transaction.UNIQUE_TRANSID,
                         FEE = 0,
                         FEE_BATCH = e_transaction.FEE_BATCH,
-                        GFLAG = Convert.ToChar(item.MAIN_FLAG),
-                        INTSTATUS = '2',
-                        ISSUER_CODE = e_transaction.CARD_NUM.Substring(1, 3),
-                        MERCHANT_CODE = item.SPLIT_CARD,
-                        PROCESS_STATUS = '1',
-                        SUB_CODE = e_transaction.CARD_NUM.Substring(4, 3),
-                        SERVICEID = e_transaction.CARD_NUM.Substring(1, 6),
+                        GFLAG = item.MAIN_FLAG.ToString(),
+                        INTSTATUS = "2",
+                        ISSUER_CODE = e_transaction.CARD_NUM.Substring(0, 3),
+                        MERCHANT_CODE = item.SPLIT_CARD.Contains("%") ? e_transaction.CARD_NUM.Substring(0,3) + ChannelAlias.GetChannelAlias(e_transaction.CHANNELID.ToString())+ item.SPLIT_CARD.Substring(item.SPLIT_CARD.IndexOf("%") + 1): item.SPLIT_CARD,
+                        PROCESS_STATUS = "1",
+                        SUB_CODE = e_transaction.CARD_NUM.Substring(3, 3),
+                        SERVICEID = e_transaction.CARD_NUM.Substring(0, 6),
                         SETTLE_BATCH = e_transaction.SETTLE_BATCH,
                         TRANSID = e_transaction.TRANSID,
                         TRANS_AMOUNT = fee,
@@ -76,7 +76,7 @@ namespace TmcSettler.ConsoleApp.Services
                         TRANS_REF = e_transaction.MERCHANT_CODE,
                         TRANS_TYPE = "1"
                     };
-
+                    Console.WriteLine("Split transaction Merchant_Code : " + feeDetail.MERCHANT_CODE + " Card_num: "+ feeDetail.CARD_NUM+" Descr " + feeDetail.TRANS_DESCR+ " isssuer" + feeDetail.ISSUER_CODE + " unique_trans: " + feeDetail.UNIQUE_TRANSID + " Value: "+ feeDetail.TRANS_AMOUNT);
                     i++;
                     feeDetailList.Add(feeDetail);
                 }
