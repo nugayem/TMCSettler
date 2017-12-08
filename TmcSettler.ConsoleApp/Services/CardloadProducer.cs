@@ -60,15 +60,25 @@ namespace TmcSettler.ConsoleApp.Services
         {
             List<E_CARDLOAD_COMMISSION_SPLIT> splitFormular =CachingProvider.GetCachedData<List<E_CARDLOAD_COMMISSION_SPLIT>>("CardLoad");
 
+            EtzbkDataContext etzbk = new EtzbkDataContext();
+            etzbk.Configuration.AutoDetectChangesEnabled = false;
 
+            int i =0;
             foreach (var item in enqueData.GetConsumingEnumerable())
             {
 
                 List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();
-                FeeProcessing.ProcessCardloadSplit(item, splitFormular);
+                feeDetailList=FeeProcessing.ProcessCardloadSplit(item, splitFormular);
+                etzbk.E_FEE_DETAIL_BK.AddRange(feeDetailList);
+if (i%50==0)
+                {
+                    etzbk.SaveChanges();
+                }
+                i++;
+
 
             }
-
+            etzbk.SaveChanges();
         }
 
 
