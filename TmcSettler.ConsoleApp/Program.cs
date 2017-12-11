@@ -1,13 +1,8 @@
 ﻿using LoggerHelper.Services;
 using StructureMap;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DALContext;
 using System.Threading;
-using DALContext.Model;
 using System.Diagnostics;
 using System.Configuration;
 using TmcSettler.ConsoleApp.Services;
@@ -128,6 +123,13 @@ namespace TmcSettler.ConsoleApp
             logger.LogInfoMessage(nameof(TmcSettler) + "Starting the TransferProducer  Threads ");
             transferProducerThread.Start();
 
+
+
+            logger.LogInfoMessage(nameof(TmcSettler) + "Instantiating PaymentProducer  Threads ");
+            PaymentProducer paymentProducer = new PaymentProducer();
+            Thread paymentProducerThread = new Thread(new ThreadStart(paymentProducer.Run));
+            logger.LogInfoMessage(nameof(TmcSettler) + "Starting the PaymentProducer  Threads ");
+            paymentProducerThread.Start();
 
 
 

@@ -79,6 +79,9 @@
     <Compile Include="Services\CardloadProducer.cs" />
     <Compile Include="Services\EtranzactChannelTransaction.cs" />
     <Compile Include="Services\FeeProcessing.cs" />
+    <Compile Include="Services\FeeService\IFeeProcess.cs" />
+    <Compile Include="Services\FeeService\ProccessRatioFee.cs" />
+    <Compile Include="Services\FeeService\ProcessAbsoluteFee.cs" />
     <Compile Include="Services\MastercardTransactions.cs" />
     <Compile Include="Services\NonEtzCardTransaction.cs" />
     <Compile Include="Services\PaymentProducer.cs" />

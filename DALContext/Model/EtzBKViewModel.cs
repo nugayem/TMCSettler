@@ -112,7 +112,7 @@ namespace DALContext.Model
         public string SPLIT_DESCR { get; set; }
         
         public string COMM_SUSPENCE { get; set; }
-        public int MAIN_FLAG { get; set; }
+        public string  MAIN_FLAG { get; set; }
         public DateTime CREATED; 
 
     }

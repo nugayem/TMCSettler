@@ -59,8 +59,10 @@ namespace TmcSettler.ConsoleApp.Services
 
         {
             List<E_TRANSFER_COMMISSION_SPLIT> splitFormular = CachingProvider.GetCachedData<List<E_TRANSFER_COMMISSION_SPLIT>>("Transfer");
+            List<E_FUNDGATE_COMMISSION_SPLIT> fundGatesplitFormular = CachingProvider.GetCachedData<List<E_FUNDGATE_COMMISSION_SPLIT>>("FundGate");
 
             List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(splitFormular);
+            List<E_COMMISSION_MAP> fundGatecommission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(fundGatesplitFormular);
 
             EtzbkDataContext etzbk = new EtzbkDataContext();
             etzbk.Configuration.AutoDetectChangesEnabled = false;
@@ -70,8 +72,11 @@ namespace TmcSettler.ConsoleApp.Services
             {
 
                 List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();
+                if(item.CHANNELID=="09")
+                    feeDetailList = FeeProcessing.ProcessCardloadSplit(item, fundGatecommission);
+                else
+                    feeDetailList = FeeProcessing.ProcessCardloadSplit(item, commission);
 
-                feeDetailList = FeeProcessing.ProcessCardloadSplit(item, commission);
                 etzbk.E_FEE_DETAIL_BK.AddRange(feeDetailList);
                 if (i % 50 == 0)
                 {

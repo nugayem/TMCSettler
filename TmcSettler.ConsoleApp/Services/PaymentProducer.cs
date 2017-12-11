@@ -55,42 +55,97 @@ namespace TmcSettler.ConsoleApp.Services
             }
 
 
-            private void Consumer()
-            {
-            
+        private void Consumer()
+        {
 
 
-                List<E_TRANSFER_COMMISSION_SPLIT> splitFormular = CachingProvider.GetCachedData<List<E_TRANSFER_COMMISSION_SPLIT>>("CardLoad");
-            List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(splitFormular);
+
+            //List<E_TRANSFER_COMMISSION_SPLIT> splitFormular = CachingProvider.GetCachedData<List<E_TRANSFER_COMMISSION_SPLIT>>("CardLoad");
+            //List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(splitFormular);
 
             EtzbkDataContext etzbk = new EtzbkDataContext();
-                etzbk.Configuration.AutoDetectChangesEnabled = false;
+            etzbk.Configuration.AutoDetectChangesEnabled = false;
 
-                int i = 0;
-                foreach (var item in enqueData.GetConsumingEnumerable())
-                {
+            int i = 0;
+            foreach (var item in enqueData.GetConsumingEnumerable())
+            {
                 string Merchant_Code = item.MERCHANT_CODE;
+                List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();
 
                 var spltConfir = from A in etzbk.E_MERCHANT
                                  join B in etzbk.E_CATSCALE
                                  on new { X = A.CAT_ID } equals new { X = B.CAT_ID } into jointData
                                  from joinRecord in jointData.DefaultIfEmpty()
-                                 where (A.MERCHANT_CODE == Merchant_Code)
-                                 select new { A.};
-                                 
-                    List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();
-                    feeDetailList = FeeProcessing.ProcessCardloadSplit(item, commission);
-                    etzbk.E_FEE_DETAIL_BK.AddRange(feeDetailList);
-                    if (i % 50 == 0)
-                    {
-                        etzbk.SaveChanges();
-                    }
-                    i++;
+                                 where (A.MERCHANT_CODE == Merchant_Code && joinRecord.SCALE_FROM >= item.TRANS_AMOUNT && joinRecord.SCALE_FROM <= item.TRANS_AMOUNT)
+                                 select new
+                                 {
+                                     A.FEE_STATUS,
+                                     A.SPECIAL_SPLIT,
+                                     A.CAT_ID,
+                                     joinRecord.SCALE_VALUE,
+                                     joinRecord.SCALE_FROM,
+                                     joinRecord.SCALE_TO,
+                                     joinRecord.SCALE_TYPE
+                                 };
 
+                if (spltConfir.FirstOrDefault().SPECIAL_SPLIT == "0")
+                {
+                    // Check If Fee is Charged if not, ignore and comparee value
+                    if (item.FEE>0)
+                    {
+                        //Get Commission from e_fee_commission_split
+
+                        var query = from A in etzbk.E_MERCHANT_COMMISSION_SPLIT
+                                    where (A.MERCHANT_CODE == item.MERCHANT_CODE)
+                                    select new E_COMMISSION_MAP
+                                    {
+                                        AGENT = "",
+                                        MAIN_FLAG = A.MAIN_FLAG,
+                                        SPLIT_CARD = A.SPLIT_CARD,
+                                        RATIO = A.RATIO,
+                                        SPLIT_DESCR = A.SPLIT_DESCR,
+                                        COMM_SUSPENCE = item.MERCHANT_CODE
+
+                                    };
+                        List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(query.ToList());
+
+                        feeDetailList = FeeProcessing.ProcessCardloadSplit(item, commission);
+                    }
+                }
+                else
+                {
+                    var query = from A in etzbk.E_MERCHANT_SPECIAL_SPLIT
+                                where (A.MERCHANT_CODE == item.MERCHANT_CODE)
+                                select new E_COMMISSION_MAP
+                                {
+                                    AGENT = "",
+                                    MAIN_FLAG = A.MAIN_FLAG,
+                                    SPLIT_CARD = A.SPLIT_CARD,
+                                    RATIO = A.SVALUE,
+                                    SPLIT_DESCR = A.SPLIT_DESCR,
+                                    COMM_SUSPENCE = item.MERCHANT_CODE
+
+                                };
+                    List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(query.ToList());
+
+                    feeDetailList = FeeProcessing.ProcessCardloadSplit(item, commission);
 
                 }
-                etzbk.SaveChanges();
+
+
+
+               // feeDetailList = FeeProcessing.ProcessCardloadSplit(item, commission);
+                etzbk.E_FEE_DETAIL_BK.AddRange(feeDetailList);
+                if (i % 50 == 0)
+                {
+                    etzbk.SaveChanges();
+                }
+                i++;
+
+
             }
+            etzbk.SaveChanges();
+        }
 
 
 

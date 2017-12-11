@@ -404,20 +404,35 @@ namespace DALContext.Model
         public string MERCHANT_CODE { get; set; }
         [MaxLength(20)]
         public string SPLIT_CARD { get; set; }
-       public decimal RATIO { get; set; }
+        public decimal RATIO { get; set; }
         [MaxLength(1)]
         public string AGENT { get; set; }
         [MaxLength(30)]
         public string SPLIT_DESCR { get; set; }
-       public decimal MIN_CHARGE { get; set; }
-       public decimal MAX_CHARGE { get; set; }
+        public decimal MIN_CHARGE { get; set; }
+        public decimal MAX_CHARGE { get; set; }
         [MaxLength(20)]
         public string COMM_SUSPENCE { get; set; }
         [MaxLength(2)]
         public string PARTY_NO { get; set; }
         [MaxLength(1)]
         public string MAIN_FLAG { get; set; }
-       
+
         public DateTime CREATED { get; set; } = DateTime.Now;
+    }
+
+    public class E_FUNDGATE_COMMISSION_SPLIT : IMapFrom<E_COMMISSION_MAP>
+    {
+        [Key]
+        public int KEYID { get; set; }
+        [MaxLength(20)]
+        public string CARD_NUM { get; set; }
+        [MaxLength(16)]
+        public string SPLIT_CARD { get; set; }
+        [MaxLength(30)]
+        public string SPLIT_DESCR { get; set; }
+        public int RATIO { get; set; }
+        [MaxLength(2)]
+        public string PARTY_NO { get; set; }
     }
 }
