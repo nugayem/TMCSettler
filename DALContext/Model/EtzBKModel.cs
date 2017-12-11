@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace DALContext.Model
 {
@@ -246,7 +247,7 @@ namespace DALContext.Model
 
         [MaxLength(10)]
         public string COMM_SUSPENCE { get; set; }
-        public int MAIN_FLAG { get; set; }
+        public string MAIN_FLAG { get; set; }
         public DateTime CREATED { get; set; } = DateTime.Now;
 
     }
@@ -269,7 +270,7 @@ namespace DALContext.Model
 
         [MaxLength(10)]
         public string COMM_SUSPENCE { get; set; }
-        public int MAIN_FLAG { get; set; }
+        public string MAIN_FLAG { get; set; }
         public DateTime CREATED { get; set; } = DateTime.Now;
 
     }
@@ -421,7 +422,7 @@ namespace DALContext.Model
         public DateTime CREATED { get; set; } = DateTime.Now;
     }
 
-    public class E_FUNDGATE_COMMISSION_SPLIT : IMapFrom<E_COMMISSION_MAP>
+    public class E_FUNDGATE_COMMISSION_SPLIT : IHaveCustomMappings
     {
         [Key]
         public int KEYID { get; set; }
@@ -431,8 +432,17 @@ namespace DALContext.Model
         public string SPLIT_CARD { get; set; }
         [MaxLength(30)]
         public string SPLIT_DESCR { get; set; }
-        public int RATIO { get; set; }
+        public decimal RATIO { get; set; }
         [MaxLength(2)]
         public string PARTY_NO { get; set; }
+
+        public void CreateMappings(IMapperConfigurationExpression configuration)
+        {
+            configuration.CreateMap<E_FUNDGATE_COMMISSION_SPLIT, E_COMMISSION_MAP>(MemberList.None)
+                .ForMember(o => o.COMM_SUSPENCE, opt => opt.MapFrom(d => d.CARD_NUM))
+                .ForMember(o => o.SPLIT_CARD, opt => opt.MapFrom(d => d.SPLIT_CARD))
+                .ForMember(o => o.SPLIT_DESCR, opt => opt.MapFrom(d => d.SPLIT_DESCR))
+                .ForMember(o => o.RATIO, opt => opt.MapFrom(d => d.RATIO)).ReverseMap();
+        }
     }
 }

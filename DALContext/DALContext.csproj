@@ -79,6 +79,22 @@
     <Compile Include="Migrations\201712100819208_updateEtranx.Designer.cs">
       <DependentUpon>201712100819208_updateEtranx.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712111713072_AddFunGateSplit.cs" />
+    <Compile Include="Migrations\201712111713072_AddFunGateSplit.Designer.cs">
+      <DependentUpon>201712111713072_AddFunGateSplit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712111714514_AddFunGateSplits.cs" />
+    <Compile Include="Migrations\201712111714514_AddFunGateSplits.Designer.cs">
+      <DependentUpon>201712111714514_AddFunGateSplits.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712111716380_AddFunGateSplits2.cs" />
+    <Compile Include="Migrations\201712111716380_AddFunGateSplits2.Designer.cs">
+      <DependentUpon>201712111716380_AddFunGateSplits2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712111846126_modelChanged.cs" />
+    <Compile Include="Migrations\201712111846126_modelChanged.Designer.cs">
+      <DependentUpon>201712111846126_modelChanged.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\EtzBKModel.cs" />
     <Compile Include="Model\EtzBKViewModel.cs" />
@@ -108,6 +124,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712100819208_updateEtranx.resx">
       <DependentUpon>201712100819208_updateEtranx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712111713072_AddFunGateSplit.resx">
+      <DependentUpon>201712111713072_AddFunGateSplit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712111714514_AddFunGateSplits.resx">
+      <DependentUpon>201712111714514_AddFunGateSplits.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712111716380_AddFunGateSplits2.resx">
+      <DependentUpon>201712111716380_AddFunGateSplits2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712111846126_modelChanged.resx">
+      <DependentUpon>201712111846126_modelChanged.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

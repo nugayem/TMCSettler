@@ -59,7 +59,8 @@ namespace DALContext
         public DbSet<E_MERCHANT> E_MERCHANT { get; set; }
         public DbSet<E_MERCHANT_COMMISSION_SPLIT> E_MERCHANT_COMMISSION_SPLIT { get; set; }
         public DbSet<E_MERCHANT_SPECIAL_SPLIT> E_MERCHANT_SPECIAL_SPLIT { get; set; }
-      
+
+        public DbSet<E_FUNDGATE_COMMISSION_SPLIT> E_FUNDGATE_COMMISSION_SPLIT { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -67,6 +68,7 @@ namespace DALContext
 
             modelBuilder.Entity<E_TRANSACTION>().Property(x => x.TRANS_AMOUNT).HasPrecision(18, 2);
             modelBuilder.Entity<E_TRANSACTION>().Property(x => x.FEE).HasPrecision(18, 2);
+            modelBuilder.Entity<E_FUNDGATE_COMMISSION_SPLIT>().Property(x => x.RATIO).HasPrecision(18, 2);
         }
     }
 

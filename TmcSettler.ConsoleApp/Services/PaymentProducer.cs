@@ -57,12 +57,6 @@ namespace TmcSettler.ConsoleApp.Services
 
         private void Consumer()
         {
-
-
-
-            //List<E_TRANSFER_COMMISSION_SPLIT> splitFormular = CachingProvider.GetCachedData<List<E_TRANSFER_COMMISSION_SPLIT>>("CardLoad");
-            //List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(splitFormular);
-
             EtzbkDataContext etzbk = new EtzbkDataContext();
             etzbk.Configuration.AutoDetectChangesEnabled = false;
 
@@ -72,28 +66,31 @@ namespace TmcSettler.ConsoleApp.Services
                 string Merchant_Code = item.MERCHANT_CODE;
                 List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();
 
-                var spltConfir = from A in etzbk.E_MERCHANT
-                                 join B in etzbk.E_CATSCALE
-                                 on new { X = A.CAT_ID } equals new { X = B.CAT_ID } into jointData
-                                 from joinRecord in jointData.DefaultIfEmpty()
-                                 where (A.MERCHANT_CODE == Merchant_Code && joinRecord.SCALE_FROM >= item.TRANS_AMOUNT && joinRecord.SCALE_FROM <= item.TRANS_AMOUNT)
-                                 select new
-                                 {
-                                     A.FEE_STATUS,
-                                     A.SPECIAL_SPLIT,
-                                     A.CAT_ID,
-                                     joinRecord.SCALE_VALUE,
-                                     joinRecord.SCALE_FROM,
-                                     joinRecord.SCALE_TO,
-                                     joinRecord.SCALE_TYPE
-                                 };
+                var Mquery = from A in etzbk.E_MERCHANT
+                             join B in etzbk.E_CATSCALE
+                             on new { X = A.CAT_ID } equals new { X = B.CAT_ID } into jointData
+                             from joinRecord in jointData.DefaultIfEmpty()
+                             where (A.MERCHANT_CODE == Merchant_Code)
+                             select new
+                             {
+                                 A.FEE_STATUS,
+                                 A.SPECIAL_SPLIT,
+                                 joinRecord.SCALE_VALUE,
+                                 joinRecord.CAT_ID
+                             };
 
-                if (spltConfir.FirstOrDefault().SPECIAL_SPLIT == "0")
+                var merchant = Mquery.FirstOrDefault();
+                if (merchant == null)
+                {
+                    ///Write Code to handle No Merchant Code or Split category configured
+                }
+                if (merchant.SPECIAL_SPLIT == "0")
                 {
                     // Check If Fee is Charged if not, ignore and comparee value
-                    if (item.FEE>0)
-                    {
-                        //Get Commission from e_fee_commission_split
+                    if (merchant.SCALE_VALUE == 1 & item.FEE == 0)
+                        return;
+                    else
+                    {      //Get Commission from e_fee_commission_split
 
                         var query = from A in etzbk.E_MERCHANT_COMMISSION_SPLIT
                                     where (A.MERCHANT_CODE == item.MERCHANT_CODE)
@@ -109,9 +106,10 @@ namespace TmcSettler.ConsoleApp.Services
                                     };
                         List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(query.ToList());
 
-                        feeDetailList = FeeProcessing.ProcessCardloadSplit(item, commission);
+                        feeDetailList = FeeProcessing.ProcessRatioPaymentSplit(item, commission);
                     }
                 }
+
                 else
                 {
                     var query = from A in etzbk.E_MERCHANT_SPECIAL_SPLIT
@@ -128,13 +126,13 @@ namespace TmcSettler.ConsoleApp.Services
                                 };
                     List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(query.ToList());
 
-                    feeDetailList = FeeProcessing.ProcessCardloadSplit(item, commission);
+                    //  feeDetailList = FeeProcessing.ProcessAbsolutePaymentSplit(item, commission);
 
                 }
 
 
 
-               // feeDetailList = FeeProcessing.ProcessCardloadSplit(item, commission);
+                // feeDetailList = FeeProcessing.ProcessCardloadSplit(item, commission);
                 etzbk.E_FEE_DETAIL_BK.AddRange(feeDetailList);
                 if (i % 50 == 0)
                 {
