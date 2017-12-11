@@ -10,10 +10,8 @@ using System.Threading.Tasks;
 
 namespace TmcSettler.ConsoleApp.Services
 {
-    public class CardloadProducer
+    public class TransferProducer
     {
-
-
         private static BlockingCollection<E_TRANSACTION> enqueData;//= new BlockingCollection<E_Transaction>();
 
         List<E_TRANSACTION> itemsToRemove = new List<E_TRANSACTION>();
@@ -24,16 +22,16 @@ namespace TmcSettler.ConsoleApp.Services
             Task t1 = Task.Factory.StartNew(Producer);
             Task t2 = Task.Factory.StartNew(Consumer);
 
-            List<Task> taskList = new List<Task> { t1, t2};
+            List<Task> taskList = new List<Task> { t1, t2 };
             Task.WaitAll(taskList.ToArray());
 
-            Console.WriteLine("CardLoad Proccessing Batch Complete");
+            Console.WriteLine("Transfer Proccessing Batch Complete");
         }
 
         private void Producer()
         {
             EtzbkDataContext db = new EtzbkDataContext();
-            var etzTrx = db.E_TRANSACTION.Where(a => a.TRANS_CODE == "D").ToList();
+            var etzTrx = db.E_TRANSACTION.Where(a => a.TRANS_CODE == "T").ToList();
 
 
             Parallel.ForEach(etzTrx, item =>
@@ -44,7 +42,7 @@ namespace TmcSettler.ConsoleApp.Services
                 if (successful)
                 {
                     enqueData.Add(item);
-                    Console.WriteLine("Equeued Data" + item.UNIQUE_TRANSID); 
+                    Console.WriteLine("Equeued Data" + item.UNIQUE_TRANSID);
                 }
                 else
                 {
@@ -60,9 +58,10 @@ namespace TmcSettler.ConsoleApp.Services
         private void Consumer()
 
         {
-            List<E_CARDLOAD_COMMISSION_SPLIT> splitFormular = CachingProvider.GetCachedData<List<E_CARDLOAD_COMMISSION_SPLIT>>("CardLoad");
+            List<E_TRANSFER_COMMISSION_SPLIT> splitFormular = CachingProvider.GetCachedData<List<E_TRANSFER_COMMISSION_SPLIT>>("Transfer");
 
             List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(splitFormular);
+
             EtzbkDataContext etzbk = new EtzbkDataContext();
             etzbk.Configuration.AutoDetectChangesEnabled = false;
 
@@ -71,6 +70,7 @@ namespace TmcSettler.ConsoleApp.Services
             {
 
                 List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();
+
                 feeDetailList = FeeProcessing.ProcessCardloadSplit(item, commission);
                 etzbk.E_FEE_DETAIL_BK.AddRange(feeDetailList);
                 if (i % 50 == 0)

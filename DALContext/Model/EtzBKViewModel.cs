@@ -98,4 +98,23 @@ namespace DALContext.Model
 
         }
     }
+
+    public class E_COMMISSION_MAP
+    {
+       
+        public string BANK_CODE { get; set; }
+        
+        public string SPLIT_CARD { get; set; }
+        public decimal RATIO { get; set; }
+        
+        public string AGENT { get; set; }
+        
+        public string SPLIT_DESCR { get; set; }
+        
+        public string COMM_SUSPENCE { get; set; }
+        public int MAIN_FLAG { get; set; }
+        public DateTime CREATED; 
+
+    }
+
 }

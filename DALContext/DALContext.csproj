@@ -59,6 +59,27 @@
   <ItemGroup>
     <Compile Include="DataContexts.cs" />
     <Compile Include="EFDbConfiguration.cs" />
+    <Compile Include="Migrations\201712081453119_trans_amountChangeType.cs" />
+    <Compile Include="Migrations\201712081453119_trans_amountChangeType.Designer.cs">
+      <DependentUpon>201712081453119_trans_amountChangeType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712092041021_spltCardDDependeTable.cs" />
+    <Compile Include="Migrations\201712092041021_spltCardDDependeTable.Designer.cs">
+      <DependentUpon>201712092041021_spltCardDDependeTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712092056449_changeDatatype.cs" />
+    <Compile Include="Migrations\201712092056449_changeDatatype.Designer.cs">
+      <DependentUpon>201712092056449_changeDatatype.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712092135362_spltCardDDependeTablevvvv.cs" />
+    <Compile Include="Migrations\201712092135362_spltCardDDependeTablevvvv.Designer.cs">
+      <DependentUpon>201712092135362_spltCardDDependeTablevvvv.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712100819208_updateEtranx.cs" />
+    <Compile Include="Migrations\201712100819208_updateEtranx.Designer.cs">
+      <DependentUpon>201712100819208_updateEtranx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\EtzBKModel.cs" />
     <Compile Include="Model\EtzBKViewModel.cs" />
     <Compile Include="Model\TmcModel.cs" />
@@ -71,6 +92,23 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201712081453119_trans_amountChangeType.resx">
+      <DependentUpon>201712081453119_trans_amountChangeType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712092041021_spltCardDDependeTable.resx">
+      <DependentUpon>201712092041021_spltCardDDependeTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712092056449_changeDatatype.resx">
+      <DependentUpon>201712092056449_changeDatatype.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712092135362_spltCardDDependeTablevvvv.resx">
+      <DependentUpon>201712092135362_spltCardDDependeTablevvvv.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712100819208_updateEtranx.resx">
+      <DependentUpon>201712100819208_updateEtranx.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

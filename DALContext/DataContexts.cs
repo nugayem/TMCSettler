@@ -55,7 +55,11 @@ namespace DALContext
         public DbSet<E_FEE_DETAIL_BK> E_FEE_DETAIL_BK { get; set; }
         public DbSet<E_TRANSACTION> E_TRANSACTION { get; set; }
         public DbSet<E_CARDLOAD_COMMISSION_SPLIT> E_CARDLOAD_COMMISSION_SPLIT { get; set; }
-
+        public DbSet<E_CATSCALE> E_CATSCALE { get; set; }
+        public DbSet<E_MERCHANT> E_MERCHANT { get; set; }
+        public DbSet<E_MERCHANT_COMMISSION_SPLIT> E_MERCHANT_COMMISSION_SPLIT { get; set; }
+        public DbSet<E_MERCHANT_SPECIAL_SPLIT> E_MERCHANT_SPECIAL_SPLIT { get; set; }
+      
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

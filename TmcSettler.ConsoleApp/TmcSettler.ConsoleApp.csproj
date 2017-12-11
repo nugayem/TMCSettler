@@ -81,8 +81,10 @@
     <Compile Include="Services\FeeProcessing.cs" />
     <Compile Include="Services\MastercardTransactions.cs" />
     <Compile Include="Services\NonEtzCardTransaction.cs" />
+    <Compile Include="Services\PaymentProducer.cs" />
     <Compile Include="Services\ProducerWork.cs" />
     <Compile Include="Services\Settings.cs" />
+    <Compile Include="Services\TransferProducer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

@@ -33,13 +33,26 @@ namespace TmcSettler.ConsoleApp.Services
                 new E_CARDLOAD_COMMISSION_SPLIT (){ BANK_CODE = "011", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 60, SPLIT_CARD = "0441234567", SPLIT_DESCR = "Bank Commission" },
                 new E_CARDLOAD_COMMISSION_SPLIT (){ BANK_CODE = "033", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 30, SPLIT_CARD = "%9999", SPLIT_DESCR = "Bank Commission", COMM_SUSPENCE="033PAYABLE" },
                 new E_CARDLOAD_COMMISSION_SPLIT (){ BANK_CODE = "033", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 70, SPLIT_CARD = "0441234567", SPLIT_DESCR = "Bank Commission", COMM_SUSPENCE="033PAYABLE" },
-                new E_CARDLOAD_COMMISSION_SPLIT (){ BANK_CODE = "033", CREATED = DateTime.Now, MAIN_FLAG = 1, RATIO = 0, SPLIT_CARD = "0441234567", SPLIT_DESCR = "Bank Commission", COMM_SUSPENCE="033PAYABLE" },
+                new E_CARDLOAD_COMMISSION_SPLIT (){ BANK_CODE = "033", CREATED = DateTime.Now, MAIN_FLAG = 1, RATIO = 0, SPLIT_CARD = "0447777567", SPLIT_DESCR = "Bank Commission", COMM_SUSPENCE="033PAYABLE" },
                 new E_CARDLOAD_COMMISSION_SPLIT (){ BANK_CODE = "000", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 50, SPLIT_CARD = "%9999", SPLIT_DESCR = "Bank Commission" },
                 new E_CARDLOAD_COMMISSION_SPLIT (){ BANK_CODE = "000", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 50, SPLIT_CARD = "0441234567", SPLIT_DESCR = "Bank Commission" }
             };
 
-            
+            //EtzbkDataContext etzTrx = new EtzbkDataContext();
+            // var etzTrx = db.E_CARDLOAD_COMMISSION_SPLIT.ToList();
+            List<E_TRANSFER_COMMISSION_SPLIT> transferSplitList = new List<E_TRANSFER_COMMISSION_SPLIT>()
+            {
+                new E_TRANSFER_COMMISSION_SPLIT (){ BANK_CODE="011", CREATED=DateTime.Now, MAIN_FLAG=0, RATIO=40, SPLIT_CARD="%9999", SPLIT_DESCR="Bank Commission" },
+                new E_TRANSFER_COMMISSION_SPLIT (){ BANK_CODE = "011", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 60, SPLIT_CARD = "0441234567", SPLIT_DESCR = "Bank Commission" },
+                new E_TRANSFER_COMMISSION_SPLIT (){ BANK_CODE = "033", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 30, SPLIT_CARD = "%9999", SPLIT_DESCR = "Bank Commission", COMM_SUSPENCE="033PAYABLE" },
+                new E_TRANSFER_COMMISSION_SPLIT (){ BANK_CODE = "033", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 70, SPLIT_CARD = "0441234567", SPLIT_DESCR = "Bank Commission", COMM_SUSPENCE="033PAYABLE" },                
+                new E_TRANSFER_COMMISSION_SPLIT (){ BANK_CODE = "000", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 50, SPLIT_CARD = "%9999", SPLIT_DESCR = "Bank Commission" },
+                new E_TRANSFER_COMMISSION_SPLIT (){ BANK_CODE = "000", CREATED = DateTime.Now, MAIN_FLAG = 0, RATIO = 50, SPLIT_CARD = "0441234567", SPLIT_DESCR = "Bank Commission" }
+            };
+
+
             CachingProvider.AddItem("CardLoad", cardLoadSplitList);
+            CachingProvider.AddItem("Transfer", transferSplitList);
 
 
         }
