@@ -76,6 +76,7 @@ namespace TmcSettler.ConsoleApp.Services
                                  A.FEE_STATUS,
                                  A.SPECIAL_SPLIT,
                                  joinRecord.SCALE_VALUE,
+                                 joinRecord.SCALE_TYPE,
                                  joinRecord.CAT_ID
                              };
 
@@ -87,7 +88,7 @@ namespace TmcSettler.ConsoleApp.Services
                 if (merchantScale.SPECIAL_SPLIT == "0")
                 {
                     // Check If Fee is Charged if not, ignore and comparee value
-                    if (merchantScale.SCALE_VALUE == 1 & item.FEE == 0)
+                    if (merchantScale.SCALE_TYPE == "1" & item.FEE == 0)
                         item.FEE = FeeProcessing.CalculateFeeBeneficiary(merchantScale.SCALE_VALUE, item.TRANS_AMOUNT);
                     var query = from A in etzbk.E_MERCHANT_COMMISSION_SPLIT
                                 where (A.MERCHANT_CODE == item.MERCHANT_CODE)
@@ -103,6 +104,8 @@ namespace TmcSettler.ConsoleApp.Services
                                 };
                     List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(query.ToList());
 
+
+                    etzbk.e_Settlement
                     feeDetailList = FeeProcessing.ProcessRatioPaymentSplit(item, commission);
 
                 }

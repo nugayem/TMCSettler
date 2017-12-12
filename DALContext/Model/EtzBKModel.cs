@@ -275,7 +275,18 @@ namespace DALContext.Model
 
     }
 
-
+    public class E_SETTLE_BATCH
+    {
+        [Key]
+        public int ID { get; set; }
+        [MaxLength(20)]
+        public string BATCH_ID { get; set; }
+        public DateTime BATCH_DATE { get; set; }
+        [MaxLength(1)]
+        public string CLOSED { get; set; }
+        public DateTime START_DATE { get; set; }
+        public DateTime END_DATE { get; set; }
+    }
     public class E_MERCHANT
     {
         [Key]
@@ -339,7 +350,7 @@ namespace DALContext.Model
         public decimal? ONLINE_BALANCE { get; set; }
         public DateTime OFFLINE_DATE { get; set; }
         public decimal OFFLINE_BALANCE { get; set; }
-        public decimal FEE_STATUS { get; set; }
+        public int FEE_STATUS { get; set; }
         public decimal FEE_RATIO { get; set; }
         public decimal EXTRA_FEE { get; set; }
         [MaxLength(1)]
