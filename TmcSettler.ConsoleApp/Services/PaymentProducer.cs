@@ -66,7 +66,7 @@ namespace TmcSettler.ConsoleApp.Services
                 string Merchant_Code = item.MERCHANT_CODE;
                 List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();
 
-                var Mquery = from A in etzbk.E_MERCHANT
+                var merchantScaleQuery = from A in etzbk.E_MERCHANT
                              join B in etzbk.E_CATSCALE
                              on new { X = A.CAT_ID } equals new { X = B.CAT_ID } into jointData
                              from joinRecord in jointData.DefaultIfEmpty()
@@ -79,37 +79,33 @@ namespace TmcSettler.ConsoleApp.Services
                                  joinRecord.CAT_ID
                              };
 
-                var merchant = Mquery.FirstOrDefault();
-                if (merchant == null)
+                var merchantScale = merchantScaleQuery.FirstOrDefault();
+                if (merchantScale == null)
                 {
                     ///Write Code to handle No Merchant Code or Split category configured
                 }
-                if (merchant.SPECIAL_SPLIT == "0")
+                if (merchantScale.SPECIAL_SPLIT == "0")
                 {
                     // Check If Fee is Charged if not, ignore and comparee value
-                    if (merchant.SCALE_VALUE == 1 & item.FEE == 0)
-                        return;
-                    else
-                    {      //Get Commission from e_fee_commission_split
+                    if (merchantScale.SCALE_VALUE == 1 & item.FEE == 0)
+                        item.FEE = FeeProcessing.CalculateFeeBeneficiary(merchantScale.SCALE_VALUE, item.TRANS_AMOUNT);
+                    var query = from A in etzbk.E_MERCHANT_COMMISSION_SPLIT
+                                where (A.MERCHANT_CODE == item.MERCHANT_CODE)
+                                select new E_COMMISSION_MAP
+                                {
+                                    AGENT = "",
+                                    MAIN_FLAG = A.MAIN_FLAG,
+                                    SPLIT_CARD = A.SPLIT_CARD,
+                                    RATIO = A.RATIO,
+                                    SPLIT_DESCR = A.SPLIT_DESCR,
+                                    COMM_SUSPENCE = item.MERCHANT_CODE
 
-                        var query = from A in etzbk.E_MERCHANT_COMMISSION_SPLIT
-                                    where (A.MERCHANT_CODE == item.MERCHANT_CODE)
-                                    select new E_COMMISSION_MAP
-                                    {
-                                        AGENT = "",
-                                        MAIN_FLAG = A.MAIN_FLAG,
-                                        SPLIT_CARD = A.SPLIT_CARD,
-                                        RATIO = A.RATIO,
-                                        SPLIT_DESCR = A.SPLIT_DESCR,
-                                        COMM_SUSPENCE = item.MERCHANT_CODE
+                                };
+                    List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(query.ToList());
 
-                                    };
-                        List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(query.ToList());
+                    feeDetailList = FeeProcessing.ProcessRatioPaymentSplit(item, commission);
 
-                        feeDetailList = FeeProcessing.ProcessRatioPaymentSplit(item, commission);
-                    }
                 }
-
                 else
                 {
                     var query = from A in etzbk.E_MERCHANT_SPECIAL_SPLIT
