@@ -23,15 +23,7 @@ namespace TmcSettler.ConsoleApp.Services
             startdate = DateTime.Today.AddDays(-Settings.number_of_backlogdays);
         }
 
-        public static void GenerateBatchID()
-        {
-//            string [] alphabet= {'A'}
-            string year = DateTime.Now.Year.ToString("yy");
-            string month = Number2String(DateTime.Now.Month, true);
-            string day = Number2String(DateTime.Now.Day, true);
-            string settle_batch = year + month + day;
 
-        }
         private static String Number2String(int number, bool isCaps)
 
         {

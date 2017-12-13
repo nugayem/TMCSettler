@@ -20,11 +20,12 @@ namespace DALContext
         {
             Database.Connection.ConnectionString = connectionString;
         }
-
+        
 
         public DbSet<E_TMCREQUEST> E_TMCREQUEST { get; set; }
         public DbSet<E_TMCHOST_RESP> E_TMCHOST_RESP { get; set; }
         public DbSet<E_TMCNODE> E_TMCNODE { get; set; }
+        public DbSet<E_REQUESTLOG> E_REQUESTLOG { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -61,7 +62,7 @@ namespace DALContext
         public DbSet<E_MERCHANT_SPECIAL_SPLIT> E_MERCHANT_SPECIAL_SPLIT { get; set; }
         public DbSet<E_SETTLEMENT_DOWNLOAD_BK> E_SETTLEMENT_DOWNLOAD_BK { get; set; }
         public DbSet<E_SETTLE_BATCH> E_SETTLE_BATCH { get; set; }
-        
+        public DbSet<E_FEEBATCH> E_FEEBATCH { get; set; }
 
         public DbSet<E_FUNDGATE_COMMISSION_SPLIT> E_FUNDGATE_COMMISSION_SPLIT { get; set; }
 

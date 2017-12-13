@@ -104,8 +104,9 @@ namespace TmcSettler.ConsoleApp.Services
                                 };
                     List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(query.ToList());
 
+                    E_SETTLEMENT_DOWNLOAD_BK e_settlement = AutoMapper.Mapper.Map<E_SETTLEMENT_DOWNLOAD_BK>(item);
 
-                    etzbk.e_Settlement
+                    etzbk.E_SETTLEMENT_DOWNLOAD_BK.Add(e_settlement);
                     feeDetailList = FeeProcessing.ProcessRatioPaymentSplit(item, commission);
 
                 }

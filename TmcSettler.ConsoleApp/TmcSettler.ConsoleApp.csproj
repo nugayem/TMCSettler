@@ -87,6 +87,7 @@
     <Compile Include="Services\PaymentProducer.cs" />
     <Compile Include="Services\ProducerWork.cs" />
     <Compile Include="Services\Settings.cs" />
+    <Compile Include="Services\Settlement.cs" />
     <Compile Include="Services\TransferProducer.cs" />
   </ItemGroup>
   <ItemGroup>

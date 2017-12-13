@@ -38,6 +38,7 @@ namespace DALContext.Model
         [MaxLength(50)]
         public string EXTERNAL_TRANSID { get; set; }
         [MaxLength(50)]
+        [Index("ETRANSACTION_UNIQUE_TRANSID", IsClustered = false)]
         public string UNIQUE_TRANSID { get; set; }
         [StringLength(1)]
 
@@ -113,6 +114,7 @@ namespace DALContext.Model
         [MaxLength(50)]
         public string EXTERNAL_TRANSID { get; set; }
         [MaxLength(50)]
+        [Index("ESETTLEMENT_UNIQUE_TRANSID", IsClustered = false)]
         public string UNIQUE_TRANSID { get; set; }
         [StringLength(1)]
 
@@ -186,16 +188,14 @@ namespace DALContext.Model
         [MaxLength(50)]
         public string EXTERNAL_TRANSID { get; set; }
         [MaxLength(50)]
+        [Index("EFEEDETAIL_UNIQUE_TRANSID", IsClustered = false)]
         public string UNIQUE_TRANSID { get; set; }
         [StringLength(1)]
-
         public string REP_STATUS { get; set; }
         [StringLength(1)]
-
         public string INTSTATUS { get; set; }
         public decimal SBATCHID { get; set; }
         [StringLength(1)]
-
         public string RECALC_BAL { get; set; }
         [MaxLength(40)]
         public string SERVICEID { get; set; }
@@ -375,6 +375,7 @@ namespace DALContext.Model
         [Key]
         public int ID { get; set; }
         [MaxLength(3)]
+        [Index("CATSCALE_CATID", IsClustered = false)]
         public string CAT_ID { get; set; }
         [MaxLength(3)]
         public string SCALE_ID { get; set; } 
@@ -392,6 +393,7 @@ namespace DALContext.Model
         [Key]
         public int KEYID { get; set; }
         [MaxLength(20)]
+        [Index("SPECIALSPLIT_MERCHANTCODE", IsClustered = false)]
         public string MERCHANT_CODE { get; set; }
         [MaxLength(20)]
         public string SPLIT_CARD { get; set; }
@@ -413,6 +415,7 @@ namespace DALContext.Model
         [Key]
         public int KEYID { get; set; }
         [MaxLength(20)]
+        [Index("COMMSPLIT_MERCHANTCODE", IsClustered = false)]
         public string MERCHANT_CODE { get; set; }
         [MaxLength(20)]
         public string SPLIT_CARD { get; set; }
@@ -456,4 +459,11 @@ namespace DALContext.Model
                 .ForMember(o => o.RATIO, opt => opt.MapFrom(d => d.RATIO)).ReverseMap();
         }
     }
+    
+    public class E_FEEBATCH
+    {
+        public int ID { get; set; }
+        public int KEYID { get; set; }
+    }
+
 }

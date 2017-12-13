@@ -90,8 +90,22 @@ namespace TmcSettler.ConsoleApp.Services
 
         private static bool CheckTransactionStatusOnTMC(string UNIQUE_TRANSID, string TRANS_CODE)
         {
-            bool value = true;
+            bool value = false;
             Console.WriteLine("Checking Transaction" + UNIQUE_TRANSID);
+
+            TmcDataContext tmcData = new TmcDataContext();
+            var reversed = tmcData.E_TMCREQUEST.Where(a => a.TRANS_DATA==UNIQUE_TRANSID && a.MTI == "0420").FirstOrDefault();
+            if (reversed != null)
+                return false;
+
+            var requestResp = tmcData.E_REQUESTLOG.Where(a => a.transid == UNIQUE_TRANSID).FirstOrDefault();
+            if (requestResp == null)
+                return false;
+
+            if (requestResp.response_code == "00")
+                return true;
+
+
             return value;
 
         }

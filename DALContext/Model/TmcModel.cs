@@ -105,6 +105,7 @@ namespace DALContext.Model
         [MaxLength(6)]
         public string CARD_SCHEME { get; set; }
         [MaxLength(60)]
+        [Index("TMCREQUEST_TRANSDATA", IsClustered = false)]
         public string TRANS_DATA { get; set; }
 
         [NotMapped]
@@ -116,6 +117,7 @@ namespace DALContext.Model
 
         public int ID { get; set; }
         [MaxLength(70)]
+        [Index("TMCHOSTRESP_TRANSDATA", IsClustered = false)]
         public string TRANS_DATA { get; set; }
         [MaxLength(6)]
         public string APPROVAL_CODE { get; set; }
@@ -227,5 +229,45 @@ namespace DALContext.Model
 
 
     }
+
+    public class E_REQUESTLOG
+    {
+        public int ID { get; set; }
+        [MaxLength(90)]
+        public string transid { get; set; }
+        [MaxLength(20)]
+        public string card_num { get; set; }
+        [MaxLength()]
+        public DateTime trans_date { get; set; }
+        [MaxLength(20)]
+        public string trans_amount { get; set; }
+        [MaxLength(4)]
+        public string trans_code { get; set; }
+        [MaxLength(40)]
+        public string merchant_code { get; set; }
+        [MaxLength(2)]
+        public string response_code { get; set; }
+       
+        public DateTime response_time { get; set; }
+        [MaxLength(100)]
+        public string trans_descr { get; set; }
+        [MaxLength(20)]
+        public string client_id { get; set; }
+        [MaxLength(100)]
+        public string request_id { get; set; }
+
+        public decimal fee { get; set; }
+        [MaxLength(8)]
+        public string currency { get; set; }
+        [MaxLength(2)]
+        public string channelid { get; set; }
+        [MaxLength(6)]
+        public string stan { get; set; }
+        [MaxLength(1)]
+        public string reversed { get; set; }
+
+    }
+
+
 }
 
