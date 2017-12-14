@@ -59,49 +59,9 @@
   <ItemGroup>
     <Compile Include="DataContexts.cs" />
     <Compile Include="EFDbConfiguration.cs" />
-    <Compile Include="Migrations\201712081453119_trans_amountChangeType.cs" />
-    <Compile Include="Migrations\201712081453119_trans_amountChangeType.Designer.cs">
-      <DependentUpon>201712081453119_trans_amountChangeType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712092041021_spltCardDDependeTable.cs" />
-    <Compile Include="Migrations\201712092041021_spltCardDDependeTable.Designer.cs">
-      <DependentUpon>201712092041021_spltCardDDependeTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712092056449_changeDatatype.cs" />
-    <Compile Include="Migrations\201712092056449_changeDatatype.Designer.cs">
-      <DependentUpon>201712092056449_changeDatatype.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712092135362_spltCardDDependeTablevvvv.cs" />
-    <Compile Include="Migrations\201712092135362_spltCardDDependeTablevvvv.Designer.cs">
-      <DependentUpon>201712092135362_spltCardDDependeTablevvvv.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712100819208_updateEtranx.cs" />
-    <Compile Include="Migrations\201712100819208_updateEtranx.Designer.cs">
-      <DependentUpon>201712100819208_updateEtranx.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712111713072_AddFunGateSplit.cs" />
-    <Compile Include="Migrations\201712111713072_AddFunGateSplit.Designer.cs">
-      <DependentUpon>201712111713072_AddFunGateSplit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712111714514_AddFunGateSplits.cs" />
-    <Compile Include="Migrations\201712111714514_AddFunGateSplits.Designer.cs">
-      <DependentUpon>201712111714514_AddFunGateSplits.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712111716380_AddFunGateSplits2.cs" />
-    <Compile Include="Migrations\201712111716380_AddFunGateSplits2.Designer.cs">
-      <DependentUpon>201712111716380_AddFunGateSplits2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712111846126_modelChanged.cs" />
-    <Compile Include="Migrations\201712111846126_modelChanged.Designer.cs">
-      <DependentUpon>201712111846126_modelChanged.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712121746177_changeFeeStatusToInt.cs" />
-    <Compile Include="Migrations\201712121746177_changeFeeStatusToInt.Designer.cs">
-      <DependentUpon>201712121746177_changeFeeStatusToInt.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712131655040_e_RequestlogAdded.cs" />
-    <Compile Include="Migrations\201712131655040_e_RequestlogAdded.Designer.cs">
-      <DependentUpon>201712131655040_e_RequestlogAdded.cs</DependentUpon>
+    <Compile Include="Migrations\201712141657471_e_requestlog.cs" />
+    <Compile Include="Migrations\201712141657471_e_requestlog.Designer.cs">
+      <DependentUpon>201712141657471_e_requestlog.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\EtzBKModel.cs" />
@@ -118,38 +78,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201712081453119_trans_amountChangeType.resx">
-      <DependentUpon>201712081453119_trans_amountChangeType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712092041021_spltCardDDependeTable.resx">
-      <DependentUpon>201712092041021_spltCardDDependeTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712092056449_changeDatatype.resx">
-      <DependentUpon>201712092056449_changeDatatype.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712092135362_spltCardDDependeTablevvvv.resx">
-      <DependentUpon>201712092135362_spltCardDDependeTablevvvv.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712100819208_updateEtranx.resx">
-      <DependentUpon>201712100819208_updateEtranx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712111713072_AddFunGateSplit.resx">
-      <DependentUpon>201712111713072_AddFunGateSplit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712111714514_AddFunGateSplits.resx">
-      <DependentUpon>201712111714514_AddFunGateSplits.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712111716380_AddFunGateSplits2.resx">
-      <DependentUpon>201712111716380_AddFunGateSplits2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712111846126_modelChanged.resx">
-      <DependentUpon>201712111846126_modelChanged.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712121746177_changeFeeStatusToInt.resx">
-      <DependentUpon>201712121746177_changeFeeStatusToInt.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712131655040_e_RequestlogAdded.resx">
-      <DependentUpon>201712131655040_e_RequestlogAdded.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201712141657471_e_requestlog.resx">
+      <DependentUpon>201712141657471_e_requestlog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

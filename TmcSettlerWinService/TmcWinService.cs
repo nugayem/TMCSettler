@@ -17,6 +17,8 @@ namespace TmcWinServiceWinService
     public partial class TmcWinService : ServiceBase
     {
         private Logger logger;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool SetServiceStatus(IntPtr handle, ref ServiceStatus serviceStatus);
         private System.Timers.Timer timer;
@@ -29,6 +31,8 @@ namespace TmcWinServiceWinService
 
         protected override void OnStart(string[] args)
         {
+
+            System.IO.Directory.CreateDirectory("C:/Users/ope/Documents/tmc/tmc/Opeyemi Folder");
             // Update the service state to Start Pending.  
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
@@ -38,9 +42,10 @@ namespace TmcWinServiceWinService
             logger.LogInfoMessage(nameof(TmcWinService) + " starting TMC settler.....");
             logger.LogInfoMessage(nameof(TmcWinService) + " Start Job schedule for ");
 
+            log.Fatal("Wrting to Log Part 2");
 
-
-            //System.Timers.Timer timer = new System.Timers.Timer();
+            this.timer = new System.Timers.Timer();
+            this.timer.AutoReset = true;
             this.timer.Interval = 600000;
             this.timer.Elapsed += new System.Timers.ElapsedEventHandler(this.Timer_Elapsed);
 

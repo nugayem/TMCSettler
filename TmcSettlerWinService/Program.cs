@@ -1,4 +1,5 @@
 ﻿using DALContext.Services;
+using log4net.Config;
 using LoggerHelper.Services;
 using StructureMap;
 using System;
@@ -19,7 +20,7 @@ namespace TmcSettlerWinService
         static void Main(string[] args)
         {
 
-
+            //XmlConfigurator.Configure();
             Logger logger = new Logger();
             logger.LogInfoMessage("Starting Application");
 

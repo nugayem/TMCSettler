@@ -237,7 +237,7 @@ namespace DALContext.Model
         public string transid { get; set; }
         [MaxLength(20)]
         public string card_num { get; set; }
-        [MaxLength()]
+        
         public DateTime trans_date { get; set; }
         [MaxLength(20)]
         public string trans_amount { get; set; }
