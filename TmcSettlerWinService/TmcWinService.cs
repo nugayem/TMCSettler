@@ -19,7 +19,8 @@ namespace TmcWinServiceWinService
         private Logger logger;
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool SetServiceStatus(IntPtr handle, ref ServiceStatus serviceStatus);
-        System.Timers.Timer timer;
+        private System.Timers.Timer timer;
+
         public TmcWinService()
         {
             logger = new Logger();
@@ -34,17 +35,17 @@ namespace TmcWinServiceWinService
             serviceStatus.dwWaitHint = 100000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-            logger.LogInfoMessage(nameof(TmcWinServiceWinService) + " starting TMC settler.....");
-            logger.LogInfoMessage(nameof(TmcWinServiceWinService) + " Start Job schedule for ");
+            logger.LogInfoMessage(nameof(TmcWinService) + " starting TMC settler.....");
+            logger.LogInfoMessage(nameof(TmcWinService) + " Start Job schedule for ");
 
-            logger.LogInfoMessage(nameof(TmcWinServiceWinService) + "Creating multithreading Threads to spool from 145 to e_transaction for each channel");
 
-            //Timer timer = new System.Timers.Timer();
+
+            //System.Timers.Timer timer = new System.Timers.Timer();
             this.timer.Interval = 600000;
             this.timer.Elapsed += new System.Timers.ElapsedEventHandler(this.Timer_Elapsed);
 
-            timer.Enabled = true;
-            timer.Start();
+            this.timer.Enabled = true;
+            this.timer.Start();
 
             // Update the service state to Running.  
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
@@ -54,7 +55,7 @@ namespace TmcWinServiceWinService
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             logger.LogInfoMessage(nameof(TmcWinServiceWinService) + " starting a new round at time." +  DateTime.Now.ToString());
-
+            StartMethod();
         }
         protected override void OnStop()
         {
@@ -64,26 +65,24 @@ namespace TmcWinServiceWinService
             serviceStatus.dwWaitHint = 100000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
+            this.timer.Stop();
+            this.timer = null;
 
             logger.LogInfoMessage(nameof(TmcWinServiceWinService) + " service stopped at " + DateTime.Now.ToString());
 
-            StartMethods();
+            
 
             // Update the service state to Running.  
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
         }
 
-        private void StartMethods()
+        private void StartMethod()
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            logger.LogInfoMessage(nameof(TmcWinService) + " starting TMC settler.....");
-            logger.LogInfoMessage(nameof(TmcWinService) + " Start Job schedule for ");
-
             logger.LogInfoMessage(nameof(TmcWinService) + "Creating multithreading Threads to spool from 145 to e_transaction for each channel");
-
 
             logger.LogInfoMessage(nameof(TmcWinService) + "Instantiating EtranzactChannelTransaction  Threads ");
             EtranzactChannelTransaction etzTrx = new EtranzactChannelTransaction();

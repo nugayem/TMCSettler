@@ -18,9 +18,8 @@ namespace TmcSettler.ConsoleApp
         static void Main(string[] args)
         {
             var container = Container.For<ConsoleRegistry>();
-
-            //StructureMapResolver = new StructureMapDependencyResolver(container);
-            //DependencyResolver.SetResolver(StructureMapResolver);
+            
+            
 
             Console.WriteLine(container.WhatDidIScan());
             var app = container.GetInstance<Application>();
