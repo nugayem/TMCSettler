@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DALContext;
 using DALContext.Model;
 
-namespace TmcSettler.ConsoleApp.Services
+namespace TmcOperationService
 {
 
     public class splitValueModule

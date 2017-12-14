@@ -99,6 +99,10 @@
     <Compile Include="Migrations\201712121746177_changeFeeStatusToInt.Designer.cs">
       <DependentUpon>201712121746177_changeFeeStatusToInt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712131655040_e_RequestlogAdded.cs" />
+    <Compile Include="Migrations\201712131655040_e_RequestlogAdded.Designer.cs">
+      <DependentUpon>201712131655040_e_RequestlogAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\EtzBKModel.cs" />
     <Compile Include="Model\EtzBKViewModel.cs" />
@@ -143,6 +147,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712121746177_changeFeeStatusToInt.resx">
       <DependentUpon>201712121746177_changeFeeStatusToInt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712131655040_e_RequestlogAdded.resx">
+      <DependentUpon>201712131655040_e_RequestlogAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

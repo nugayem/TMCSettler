@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TmcSettler.ConsoleApp.Services
+namespace TmcOperationService
 {
     public class Settlement
     {

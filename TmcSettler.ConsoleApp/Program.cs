@@ -76,6 +76,9 @@ namespace TmcSettler.ConsoleApp
         public void Run()
         {
 
+
+            string settle_batch = Settlement.GenerateBatch();
+
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
