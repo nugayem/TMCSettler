@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=6.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.6.2.0\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
@@ -59,11 +59,12 @@
   <ItemGroup>
     <Compile Include="DataContexts.cs" />
     <Compile Include="EFDbConfiguration.cs" />
-    <Compile Include="Migrations\201712141657471_e_requestlog.cs" />
-    <Compile Include="Migrations\201712141657471_e_requestlog.Designer.cs">
-      <DependentUpon>201712141657471_e_requestlog.cs</DependentUpon>
+    <Compile Include="Migrations\201712170920184_adduniqueTouniTrnID.cs" />
+    <Compile Include="Migrations\201712170920184_adduniqueTouniTrnID.Designer.cs">
+      <DependentUpon>201712170920184_adduniqueTouniTrnID.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\CommissionMapViewModel.cs" />
     <Compile Include="Model\EtzBKModel.cs" />
     <Compile Include="Model\EtzBKViewModel.cs" />
     <Compile Include="Model\TmcModel.cs" />
@@ -78,8 +79,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201712141657471_e_requestlog.resx">
-      <DependentUpon>201712141657471_e_requestlog.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201712170920184_adduniqueTouniTrnID.resx">
+      <DependentUpon>201712170920184_adduniqueTouniTrnID.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

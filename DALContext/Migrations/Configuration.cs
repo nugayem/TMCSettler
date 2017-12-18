@@ -5,15 +5,14 @@ namespace DALContext.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<DALContext.TmcDataContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<DALContext.EtzbkDataContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            SetSqlGenerator("MySql.Data.MySqlClient", new MySql.Data.Entity.MySqlMigrationSqlGenerator());
         }
 
-        protected override void Seed(DALContext.TmcDataContext context)
+        protected override void Seed(DALContext.EtzbkDataContext context)
         {
             //  This method will be called after migrating to the latest version.
 

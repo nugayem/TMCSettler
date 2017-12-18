@@ -7,13 +7,13 @@ namespace DALContext.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.2-31219")]
-    public sealed partial class e_requestlog : IMigrationMetadata
+    public sealed partial class adduniqueTouniTrnID : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(e_requestlog));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(adduniqueTouniTrnID));
         
         string IMigrationMetadata.Id
         {
-            get { return "201712141657471_e_requestlog"; }
+            get { return "201712170920184_adduniqueTouniTrnID"; }
         }
         
         string IMigrationMetadata.Source

@@ -32,7 +32,7 @@ namespace TmcWinServiceWinService
         protected override void OnStart(string[] args)
         {
 
-            System.IO.Directory.CreateDirectory("C:/Users/ope/Documents/tmc/tmc/Opeyemi Folder");
+           // System.IO.Directory.CreateDirectory("C:/Users/ope/Documents/tmc/tmc/Opeyemi Folder");
             // Update the service state to Start Pending.  
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
@@ -46,11 +46,14 @@ namespace TmcWinServiceWinService
 
             this.timer = new System.Timers.Timer();
             this.timer.AutoReset = true;
-            this.timer.Interval = 600000;
+            this.timer.Interval = 60000;
             this.timer.Elapsed += new System.Timers.ElapsedEventHandler(this.Timer_Elapsed);
 
             this.timer.Enabled = true;
             this.timer.Start();
+
+            StartMethod();
+            logger.LogInfoMessage(nameof(TmcWinService) + " Timer Started ");
 
             // Update the service state to Running.  
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
@@ -108,9 +111,14 @@ namespace TmcWinServiceWinService
             mastercardTrxThread.Start();
 
 
+            logger.LogInfoMessage(nameof(EtranzactChannelTransaction) + " Waiting to Join Thread Completed ");
+
             mastercardTrxThread.Join();
             nonEtzCardThread.Join();
             etzTrxThread.Join();
+
+
+            logger.LogInfoMessage(nameof(EtranzactChannelTransaction) + "  Joined ");
 
             stopwatch.Stop();
 

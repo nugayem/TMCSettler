@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CardloadProducer.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="DataManupulation.cs" />
     <Compile Include="EtranzactChannelTransaction.cs" />
     <Compile Include="FeeProcessing.cs" />
     <Compile Include="MastercardTransactions.cs" />

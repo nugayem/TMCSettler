@@ -91,7 +91,7 @@ namespace TmcOperationService
                         item.FEE = FeeProcessing.CalculateFeeBeneficiary(merchantScale.SCALE_VALUE, item.TRANS_AMOUNT);
                     var query = from A in etzbk.E_MERCHANT_COMMISSION_SPLIT
                                 where (A.MERCHANT_CODE == item.MERCHANT_CODE)
-                                select new E_COMMISSION_MAP
+                                select new CommissionMapViewModel
                                 {
                                     AGENT = "",
                                     MAIN_FLAG = A.MAIN_FLAG,
@@ -101,7 +101,7 @@ namespace TmcOperationService
                                     COMM_SUSPENCE = item.MERCHANT_CODE
 
                                 };
-                    List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(query.ToList());
+                    List<CommissionMapViewModel> commission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(query.ToList());
 
                     E_SETTLEMENT_DOWNLOAD_BK e_settlement = AutoMapper.Mapper.Map<E_SETTLEMENT_DOWNLOAD_BK>(item);
 
@@ -113,7 +113,7 @@ namespace TmcOperationService
                 {
                     var query = from A in etzbk.E_MERCHANT_SPECIAL_SPLIT
                                 where (A.MERCHANT_CODE == item.MERCHANT_CODE)
-                                select new E_COMMISSION_MAP
+                                select new CommissionMapViewModel
                                 {
                                     AGENT = "",
                                     MAIN_FLAG = A.MAIN_FLAG,
@@ -123,7 +123,7 @@ namespace TmcOperationService
                                     COMM_SUSPENCE = item.MERCHANT_CODE
 
                                 };
-                    List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(query.ToList());
+                    List<CommissionMapViewModel> commission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(query.ToList());
 
                     //  feeDetailList = FeeProcessing.ProcessAbsolutePaymentSplit(item, commission);
 

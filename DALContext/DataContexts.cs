@@ -2,7 +2,7 @@
 using DALContext.Model;
 using MySql.Data.MySqlClient;
 using System.Data.Entity;
-
+using System.Data.Entity.Infrastructure;
 
 namespace DALContext
 {
@@ -13,7 +13,11 @@ namespace DALContext
 
         public TmcDataContext() : base("TMC145")
         {
+
+            //SetSqlGenerator("MySql.Data.MySqlClient", new MySql.Data.Entity.MySqlMigrationSqlGenerator());
             DbConfiguration.SetConfiguration(new EFDbConfiguration(ConnectionFactory.DBType.MySql));
+            var objcontext = (this as IObjectContextAdapter).ObjectContext;
+            objcontext.CommandTimeout = 300;
         }
 
         public TmcDataContext(string connectionString) : base(connectionString)

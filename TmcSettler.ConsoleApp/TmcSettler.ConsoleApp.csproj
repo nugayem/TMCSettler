@@ -39,8 +39,8 @@
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=6.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.6.2.1\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
@@ -76,19 +76,6 @@
     <Compile Include="BaseContainer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\CardloadProducer.cs" />
-    <Compile Include="Services\EtranzactChannelTransaction.cs" />
-    <Compile Include="Services\FeeProcessing.cs" />
-    <Compile Include="Services\FeeService\IFeeProcess.cs" />
-    <Compile Include="Services\FeeService\ProccessRatioFee.cs" />
-    <Compile Include="Services\FeeService\ProcessAbsoluteFee.cs" />
-    <Compile Include="Services\MastercardTransactions.cs" />
-    <Compile Include="Services\NonEtzCardTransaction.cs" />
-    <Compile Include="Services\PaymentProducer.cs" />
-    <Compile Include="Services\ProducerWork.cs" />
-    <Compile Include="Services\Settings.cs" />
-    <Compile Include="Services\Settlement.cs" />
-    <Compile Include="Services\TransferProducer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -96,6 +83,7 @@
     </None>
     <None Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
@@ -107,6 +95,10 @@
     <ProjectReference Include="..\LoggerHelper\LoggerHelper.csproj">
       <Project>{4308c796-dd7d-4087-ba2a-de413c189ecf}</Project>
       <Name>LoggerHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TmcOperationService\TmcOperationService.csproj">
+      <Project>{3BB60715-8C66-4141-A087-01013BA8EFE0}</Project>
+      <Name>TmcOperationService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

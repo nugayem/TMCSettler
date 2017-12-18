@@ -61,8 +61,8 @@ namespace TmcOperationService
             List<E_TRANSFER_COMMISSION_SPLIT> splitFormular = CachingProvider.GetCachedData<List<E_TRANSFER_COMMISSION_SPLIT>>("Transfer");
             List<E_FUNDGATE_COMMISSION_SPLIT> fundGatesplitFormular = CachingProvider.GetCachedData<List<E_FUNDGATE_COMMISSION_SPLIT>>("FundGate");
 
-            List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(splitFormular);
-            List<E_COMMISSION_MAP> fundGatecommission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(fundGatesplitFormular);
+            List<CommissionMapViewModel> commission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(splitFormular);
+            List<CommissionMapViewModel> fundGatecommission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(fundGatesplitFormular);
 
             EtzbkDataContext etzbk = new EtzbkDataContext();
             etzbk.Configuration.AutoDetectChangesEnabled = false;

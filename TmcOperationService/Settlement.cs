@@ -64,7 +64,7 @@ namespace TmcOperationService
             }
             catch (Exception _e)
             {
-                
+                Console.WriteLine(_e.Message);
             }
             return finalkey;
         }

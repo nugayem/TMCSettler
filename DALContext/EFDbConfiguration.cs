@@ -19,6 +19,8 @@ namespace DALContext
         {
             if (dbType == ConnectionFactory.DBType.MySql)
             {
+
+                //DbMigrationsConfiguration.SetSqlGenerator("MySql.Data.MySqlClient", new MySql.Data.Entity.MySqlMigrationSqlGenerator());
                 //<add name="MySQL Data Provider" invariant="MySql.Data.MySqlClient" description=".Net Framework Data Provider for MySQL" type="MySql.Data.MySqlClient.MySqlClientFactory, MySql.Data, Version=6.8.3.0" />
                 string invariantname = MySql.Data.Entity.MySqlProviderInvariantName.ProviderName;//MySql.Data.MySqlClient
                 this.SetDefaultConnectionFactory(new MySql.Data.Entity.MySqlConnectionFactory());

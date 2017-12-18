@@ -27,7 +27,7 @@ namespace TmcOperationService
 
 
         }
-        public static List<E_FEE_DETAIL_BK> ProcessCardloadSplit(E_TRANSACTION e_transaction, List<E_COMMISSION_MAP> splitFormular)
+        public static List<E_FEE_DETAIL_BK> ProcessCardloadSplit(E_TRANSACTION e_transaction, List<CommissionMapViewModel> splitFormular)
         {
             List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();
             if (e_transaction == null)
@@ -95,7 +95,7 @@ namespace TmcOperationService
 
             }
         }
-        public static List<E_FEE_DETAIL_BK> ProcessAbsolutePaymentSplit(E_TRANSACTION e_transaction, List<E_COMMISSION_MAP> splitFormular)
+        public static List<E_FEE_DETAIL_BK> ProcessAbsolutePaymentSplit(E_TRANSACTION e_transaction, List<CommissionMapViewModel> splitFormular)
         {
 
             List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();
@@ -158,7 +158,7 @@ namespace TmcOperationService
 
             }
         }
-        public static List<E_FEE_DETAIL_BK> ProcessRatioPaymentSplit(E_TRANSACTION e_transaction, List<E_COMMISSION_MAP> splitFormular)
+        public static List<E_FEE_DETAIL_BK> ProcessRatioPaymentSplit(E_TRANSACTION e_transaction, List<CommissionMapViewModel> splitFormular)
         {
 
             List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();

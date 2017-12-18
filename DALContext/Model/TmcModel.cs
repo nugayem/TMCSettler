@@ -12,10 +12,13 @@ namespace DALContext.Model
     {
         public int ID { get; set; }
         [MaxLength(4)]
+        [Index("TMCREQUEST_MTI", IsClustered = false)]
         public string MTI { get; set; }
         [MaxLength(19)]
+        [Index("TMCREQUEST_PAN", IsClustered = false)]
         public string PAN { get; set; }
         [MaxLength(6)]
+        [Index("TMCREQUEST_PRO_CODE", IsClustered = false)]
         public string PRO_CODE { get; set; }
         [MaxLength(10)]
         public string UTCDATE { get; set; }
@@ -28,6 +31,7 @@ namespace DALContext.Model
         [MaxLength(50)]
         public string TRACK2 { get; set; }
         [MaxLength(20)]
+        [Index("TMCREQUEST_TERMINAL_ID", IsClustered = false)]
         public string TERMINAL_ID { get; set; }
         [MaxLength(3)]
         public string CURRENCY { get; set; }
@@ -46,17 +50,20 @@ namespace DALContext.Model
         [MaxLength(40)]
         public string CARD_ACC_NAME { get; set; }
         [MaxLength(2)]
+        [Index("TMCREQUEST_RESPONSE_CODE", IsClustered = false)]
         public string RESPONSE_CODE { get; set; }
 
         public DateTime? RESPONSE_TIME { get; set; }
         [MaxLength(20)]
+        [Index("TMCREQUEST_TARGET", IsClustered = false)]
         public string TARGET { get; set; }
         [Column(TypeName = "char")]
         [MaxLength(1)]
         public string CANCEL { get; set; }
 
+        [Index("TMCREQUEST_AMOUNT", IsClustered = false)]
         public decimal AMOUNT { get; set; }
-
+        [Index("TMCREQUEST_TRANS_DATE", IsClustered = false)]
         public DateTime TRANS_DATE { get; set; } = DateTime.Now;
         [Column(TypeName = "char")]
         [MaxLength(1)]
@@ -64,8 +71,10 @@ namespace DALContext.Model
         [MaxLength(20)]
         public string EX_FIID { get; set; }
         [MaxLength(42)]
+        [Index("TMCREQUEST_TRANS_KEY", IsClustered = false)]
         public string TRANS_KEY { get; set; }
         [MaxLength(42)]
+        [Index("TMCREQUEST_REVERSAL_KEY", IsClustered = false)]
         public string REVERSAL_KEY { get; set; }
 
 
@@ -76,9 +85,10 @@ namespace DALContext.Model
         public decimal FEE { get; set; }
         [MaxLength(12)]
         public string REFERENCE { get; set; }
-
+        [Index("TMCREQUEST_SRC_NODE", IsClustered = false)]
         public int SRC_NODE { get; set; }
 
+        [Index("TMCREQUEST_TARGET_NODE", IsClustered = false)]
         public int TARGET_NODE { get; set; }
         [MaxLength(70)]
         public string BILLER_ID { get; set; }
@@ -86,11 +96,13 @@ namespace DALContext.Model
         public string BILL_ID { get; set; }
         [Column(TypeName = "char")]
         [MaxLength(1)]
+        [Index("TMCREQUEST_STATUS", IsClustered = false)]
         public string STATUS { get; set; }
         [Column(TypeName = "char")]
         [MaxLength(2)]
         public string ADVISE_RESPONSE { get; set; }
         [MaxLength(12)]
+        [Index("TMCREQUEST_TRANS_SEQ", IsClustered = false)]
         public string TRANS_SEQ { get; set; }
         [MaxLength(2)]
         public string ADVISE_CODE { get; set; }
@@ -99,6 +111,7 @@ namespace DALContext.Model
         [MaxLength(30)]
         public string SETTLED_ID { get; set; }
         [MaxLength(32)]
+        [Index("TMCREQUEST_PMV", IsClustered = false)]
         public string PMV { get; set; }
         [MaxLength(20)]
         public string SETTLED_BATCH { get; set; }
@@ -134,6 +147,7 @@ namespace DALContext.Model
         [MaxLength(30)]
         public string PAN { get; set; }
         [MaxLength(15)]
+        [Index("TMCHOSTRESP_REFERENCE", IsClustered = false)]
         public string REFERENCE { get; set; }
         [MaxLength(100)]
         public string FEE { get; set; }
@@ -142,8 +156,10 @@ namespace DALContext.Model
         [MaxLength(20)]
         public string DEST_ACCT { get; set; }
 
+        [Index("TMCREQUEST_TRANS_DATE", IsClustered = false)]
         public DateTime TRANS_DATE { get; set; }
         [MaxLength(20)]
+        [Index("TMCREQUEST_SWITCH_REF", IsClustered = false)]
         public string SWITCH_REF { get; set; }
 
     }

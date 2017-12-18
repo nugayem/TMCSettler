@@ -5,9 +5,8 @@ using DALContext;
 using System.Threading;
 using System.Diagnostics;
 using System.Configuration;
-using TmcSettler.ConsoleApp.Services;
 using DALContext.Services;
-
+using TmcOperationService;
 
 namespace TmcSettler.ConsoleApp
 {

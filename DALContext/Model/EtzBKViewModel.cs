@@ -70,7 +70,7 @@ namespace DALContext.Model
         }
     }
 
-    public class EtzCardTranx : IHaveCustomMappings
+    public class EtransactionViewModel : IHaveCustomMappings
     {
         public string TRANS_CODE { get; set; }
         public string CARD_NUM { get; set; }
@@ -79,8 +79,11 @@ namespace DALContext.Model
         public string TRANS_DESCR { get; set; }
         public string RESPONSE_CODE { get; set; }
         public decimal TRANS_AMOUNT { get; set; }
-        public DateTime TRANS_DATE { get; set; }
+        public DateTime TRANS_DATE { get; set; }        
+        public string TRANS_TYPE { get; set; }
+        public string CHANNELID { get; set; }
         public string EXTERNAL_TRANSID { get; set; }
+        public string UNIQUE_TRANSID { get; set; }        
         public decimal FEE { get; set; }
         public string REVERSAL_KEY { get; set; }
         public string TRANS_NO { get; set; }
@@ -88,32 +91,31 @@ namespace DALContext.Model
         public string CARD_SCHEME { get; set; }
         public string REFERENCE { get; set; }
         public string RESP_RESPONSE_CODE { get; set; }
+        public string BANK_CODE { get; set; }
 
-
+        
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<EtzCardTranx, E_TRANSACTION>(MemberList.None)
-                .ForMember(o => o.CARD_NUM, opt => opt.MapFrom(d => d.CARD_NUM));
-
-
+            configuration.CreateMap<EtransactionViewModel, E_TRANSACTION>(MemberList.None);
+                //.ForMember(o => o.UNIQUE_TRANSID, opt => opt.MapFrom(d => d.EXTERNAL_TRANSID));
         }
     }
 
-    public class E_COMMISSION_MAP
+    public class CommissionMapViewModel
     {
-       
+
         public string BANK_CODE { get; set; }
-        
+
         public string SPLIT_CARD { get; set; }
         public decimal RATIO { get; set; }
-        
+
         public string AGENT { get; set; }
-        
+
         public string SPLIT_DESCR { get; set; }
-        
+
         public string COMM_SUSPENCE { get; set; }
-        public string  MAIN_FLAG { get; set; }
-        public DateTime CREATED; 
+        public string MAIN_FLAG { get; set; }
+        public DateTime CREATED;
 
     }
 

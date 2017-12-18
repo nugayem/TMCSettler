@@ -49,7 +49,7 @@ namespace TmcSettlerWinService
                 new TmcWinService()
                 };
                 ServiceBase.Run(ServicesToRun);
-                logger.LogInfoMessage("Started");
+
             }
             catch(Exception ex) { logger.LogFatalMessage(ex.Message); }
         }

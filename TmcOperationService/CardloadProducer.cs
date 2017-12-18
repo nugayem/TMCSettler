@@ -62,7 +62,7 @@ namespace TmcOperationService
         {
             List<E_CARDLOAD_COMMISSION_SPLIT> splitFormular = CachingProvider.GetCachedData<List<E_CARDLOAD_COMMISSION_SPLIT>>("CardLoad");
 
-            List<E_COMMISSION_MAP> commission = AutoMapper.Mapper.Map<List<E_COMMISSION_MAP>>(splitFormular);
+            List<CommissionMapViewModel> commission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(splitFormular);
 
 
             EtzbkDataContext etzbk = new EtzbkDataContext();

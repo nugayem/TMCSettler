@@ -38,7 +38,7 @@ namespace DALContext.Model
         [MaxLength(50)]
         public string EXTERNAL_TRANSID { get; set; }
         [MaxLength(50)]
-        [Index("ETRANSACTION_UNIQUE_TRANSID", IsClustered = false)]
+        [Index("ETRANSACTION_UNIQUE_TRANSID", IsUnique =true, IsClustered = false)]
         public string UNIQUE_TRANSID { get; set; }
         [StringLength(1)]
 
@@ -114,7 +114,7 @@ namespace DALContext.Model
         [MaxLength(50)]
         public string EXTERNAL_TRANSID { get; set; }
         [MaxLength(50)]
-        [Index("ESETTLEMENT_UNIQUE_TRANSID", IsClustered = false)]
+        [Index("ESETTLEMENT_UNIQUE_TRANSID", IsUnique = true, IsClustered = false)]
         public string UNIQUE_TRANSID { get; set; }
         [StringLength(1)]
 
@@ -229,7 +229,7 @@ namespace DALContext.Model
 
 
 
-    public class E_CARDLOAD_COMMISSION_SPLIT : IMapFrom<E_COMMISSION_MAP>
+    public class E_CARDLOAD_COMMISSION_SPLIT : IMapFrom<CommissionMapViewModel>
     {
         [Key]
         public int KEYID { get; set; }
@@ -252,7 +252,7 @@ namespace DALContext.Model
 
     }
 
-    public class E_TRANSFER_COMMISSION_SPLIT : IMapFrom<E_COMMISSION_MAP>
+    public class E_TRANSFER_COMMISSION_SPLIT : IMapFrom<CommissionMapViewModel>
     {
         [Key]
         public int KEYID { get; set; }
@@ -452,7 +452,7 @@ namespace DALContext.Model
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<E_FUNDGATE_COMMISSION_SPLIT, E_COMMISSION_MAP>(MemberList.None)
+            configuration.CreateMap<E_FUNDGATE_COMMISSION_SPLIT, CommissionMapViewModel>(MemberList.None)
                 .ForMember(o => o.COMM_SUSPENCE, opt => opt.MapFrom(d => d.CARD_NUM))
                 .ForMember(o => o.SPLIT_CARD, opt => opt.MapFrom(d => d.SPLIT_CARD))
                 .ForMember(o => o.SPLIT_DESCR, opt => opt.MapFrom(d => d.SPLIT_DESCR))
