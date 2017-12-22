@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TmcOperationService
 {
-    public class Settlement
+    public class Settlements
     {
         public static String GenerateBatch()
         {

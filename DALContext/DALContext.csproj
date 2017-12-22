@@ -63,6 +63,10 @@
     <Compile Include="Migrations\201712170920184_adduniqueTouniTrnID.Designer.cs">
       <DependentUpon>201712170920184_adduniqueTouniTrnID.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712181933307_updateEtranzaction.cs" />
+    <Compile Include="Migrations\201712181933307_updateEtranzaction.Designer.cs">
+      <DependentUpon>201712181933307_updateEtranzaction.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\CommissionMapViewModel.cs" />
     <Compile Include="Model\EtzBKModel.cs" />
@@ -81,6 +85,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201712170920184_adduniqueTouniTrnID.resx">
       <DependentUpon>201712170920184_adduniqueTouniTrnID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712181933307_updateEtranzaction.resx">
+      <DependentUpon>201712181933307_updateEtranzaction.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

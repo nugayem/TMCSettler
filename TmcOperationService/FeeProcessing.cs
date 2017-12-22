@@ -180,6 +180,8 @@ namespace TmcOperationService
 
                     fee = CalculateFeeBeneficiary(item.RATIO, e_transaction.FEE);
 
+                    if (trans_amount < 0)
+                        return new List<E_FEE_DETAIL_BK>();
 
                     trans_amount = trans_amount - fee;
                     if (fee == 0)
@@ -224,30 +226,7 @@ namespace TmcOperationService
 
             }
         }
-        public void splittrx(E_TRANSACTION e_transaction, List<E_CARDLOAD_COMMISSION_SPLIT> splitFormular)
-        {
-            if (e_transaction == null)
-            {
-                throw new ArgumentNullException(nameof(e_transaction));
-            }
-            else
-            {
-                //string feeCardNum;
-                //string feeMerchantCode;
-                //decimal feeTransAmount;
-
-
-                foreach (var cardLoadSplit in splitFormular)
-                {
-                    if (cardLoadSplit.SPLIT_CARD == "0")
-                    {
-
-                    }
-                }
-
-            }
-        }
-
+    
     }
 
 

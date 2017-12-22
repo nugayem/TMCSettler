@@ -4,6 +4,7 @@ using DALContext.Model;
 using LoggerHelper.Services;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,38 +24,52 @@ namespace TmcOperationService
             Task<IList<E_TRANSACTION>> t2 = Task.Factory.StartNew(MastercardTrx2);
             Task<IList<E_TRANSACTION>> t3 = Task.Factory.StartNew(MastercardTrx3);
 
+            Console.WriteLine("  MastercardTransactions waiting for Merging ");
+
             List<Task> taskList = new List<Task> { t1, t2, t3 };
             Task.WaitAll(taskList.ToArray());
+            Console.WriteLine("  MastercardTransactions Merged");
 
-            var allTmcData = DataManupulation.MergeEntityList(new List<List<E_TRANSACTION>>() { t1.Result.ToList(), t2.Result.ToList(), t3.Result.ToList() });
-            /*
+            try
+            {
+                var allTmcData = DataManupulation.MergeEntityList(new List<List<E_TRANSACTION>>() { t1.Result.ToList(), t2.Result.ToList(), t3.Result.ToList() });
 
-            List<E_TRANSACTION> li = t1.Result.ToList();
-            List<E_TRANSACTION> l2 = t2.Result.ToList();
-            List<E_TRANSACTION> l3 = t3.Result.ToList();
+                Console.WriteLine(" Merge All Data Spooled... Removing Duplicate record");
 
-            List<List<E_TRANSACTION>> etList = new List<List<E_TRANSACTION>>();
-            etList.Add(li);
-            etList.Add(l2);
-            etList.Add(l3);
-            DataManupulation.MergeEntityList(etList);
 
-            //Merge All Data Spooled
-            var allTmcData = new List<E_TRANSACTION>(t1.Result.Count + t2.Result.Count + t3.Result.Count);
+                var uniqueIDs = allTmcData.Select(u => u.UNIQUE_TRANSID).Distinct().ToArray();
+                var uniqueIDsOnDB = db.E_TRANSACTION.Where(u => uniqueIDs.Contains(u.UNIQUE_TRANSID)).Select(u => u.UNIQUE_TRANSID).ToArray();
+                var etrxData = allTmcData.Where(u => !uniqueIDsOnDB.Contains(u.UNIQUE_TRANSID));
+                Console.WriteLine(etrxData.Count() + " Duplicate record removed--NonEtzCardTransaction");
 
-            allTmcData.AddRange(t1.Result);
-            allTmcData.AddRange(t2.Result);
-            allTmcData.AddRange(t3.Result);
-            */
 
-            //Check if Data already exist on eTransactions
+                db.E_TRANSACTION.AddRange(etrxData);
+                db.SaveChanges();
 
-            var uniqueIDs = allTmcData.Select(u => u.UNIQUE_TRANSID).Distinct().ToArray();
-            var uniqueIDsOnDB = db.E_TRANSACTION.Where(u => uniqueIDs.Contains(u.UNIQUE_TRANSID)).Select(u => u.UNIQUE_TRANSID).ToArray();
-            var etrxData = allTmcData.Where(u => !uniqueIDsOnDB.Contains(u.UNIQUE_TRANSID));
 
-            db.E_TRANSACTION.AddRange(etrxData);
-            db.SaveChanges();
+                Console.WriteLine(etrxData.Count() + " Record Inserted for Settlement");
+                Console.WriteLine("Marking Transaction as spooled transaction");
+                DataManupulation.UpdateTMCProcccessedTransaction(uniqueIDs);
+                Console.WriteLine("Spooled transactions Marked");
+                Console.WriteLine("Spooled transactions Marked");
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Exception from Channel 1 " + ExceptionExtensions.GetFullMessage(ex));
+                logger.LogInfoMessage(nameof(MastercardTransactions) + " " + ExceptionExtensions.GetFullMessage(ex));
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception " + ExceptionExtensions.GetFullMessage(ex));
+                logger.LogInfoMessage(nameof(MastercardTransactions) + " " + ExceptionExtensions.GetFullMessage(ex));
+            }
+
+            logger.LogInfoMessage(nameof(MastercardTransactions) + " Merged ");
+
+
+
+            Console.WriteLine("MastercardTransactions Transaction spool Completed");
 
         }
 

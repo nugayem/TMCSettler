@@ -5,6 +5,7 @@ using LoggerHelper.Services;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,24 +23,56 @@ namespace TmcOperationService
             EtzbkDataContext db = new EtzbkDataContext();
 
             Task<IList<E_TRANSACTION>> t1 = Task.Factory.StartNew(NonEtzCard1);
-            Task<IList<E_TRANSACTION>> t2 = Task.Factory.StartNew(NonEtzCard2); 
+            Task<IList<E_TRANSACTION>> t2 = Task.Factory.StartNew(NonEtzCard2);
+
+
+            Console.WriteLine("  NonEtzCardTransaction waiting for Merging ");
+
 
             List<Task> taskList = new List<Task> { t1, t2 };
             Task.WaitAll(taskList.ToArray());
+            Console.WriteLine("  NonEtzCardTransaction Merged");
+            try
+            {
+                var allTmcData = new List<E_TRANSACTION>(t1.Result.Count + t2.Result.Count);
 
-            var allTmcData = new List<E_TRANSACTION>(t1.Result.Count + t2.Result.Count);
 
-            allTmcData.AddRange(t1.Result);
-            allTmcData.AddRange(t2.Result); 
+                Console.WriteLine(" Merge All Data Spooled... Removing Duplicate record");
 
-            //Check if Data already exist on eTransactions
-            var uniqueIDs = allTmcData.Select(u => u.UNIQUE_TRANSID).Distinct().ToArray();
-            var uniqueIDsOnDB = db.E_TRANSACTION.Where(u => uniqueIDs.Contains(u.UNIQUE_TRANSID)).Select(u => u.UNIQUE_TRANSID).ToArray();
-            var etrxData = allTmcData.Where(u => !uniqueIDsOnDB.Contains(u.UNIQUE_TRANSID));
+                //Check if Data already exist on eTransactions
+                var uniqueIDs = allTmcData.Select(u => u.UNIQUE_TRANSID).Distinct().ToArray();
+                var uniqueIDsOnDB = db.E_TRANSACTION.Where(u => uniqueIDs.Contains(u.UNIQUE_TRANSID)).Select(u => u.UNIQUE_TRANSID).ToArray();
+                var etrxData = allTmcData.Where(u => !uniqueIDsOnDB.Contains(u.UNIQUE_TRANSID));
+                Console.WriteLine(etrxData.Count() + " Duplicate record removed--NonEtzCardTransaction");
 
-            db.E_TRANSACTION.AddRange(etrxData);
-            db.SaveChanges();
-            Console.WriteLine("ETZ Not Etz Transaction Completed");
+
+                db.E_TRANSACTION.AddRange(etrxData);
+                db.SaveChanges();
+
+
+                Console.WriteLine(etrxData.Count() + " Record Inserted for Settlement");
+                Console.WriteLine("Marking Transaction as spooled transaction");
+                DataManupulation.UpdateTMCProcccessedTransaction(uniqueIDs);
+                Console.WriteLine("Spooled transactions Marked");
+
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Exception from Channel 1 " + ExceptionExtensions.GetFullMessage(ex));
+                logger.LogInfoMessage(nameof(NonEtzCardTransaction) + " " + ExceptionExtensions.GetFullMessage(ex));
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception from Channel 1 " + ExceptionExtensions.GetFullMessage(ex));
+                logger.LogInfoMessage(nameof(NonEtzCardTransaction) + " " + ExceptionExtensions.GetFullMessage(ex));
+            }
+
+            logger.LogInfoMessage(nameof(NonEtzCardTransaction) + " Merged ");
+
+
+            Console.WriteLine("NonEtzCardTransaction Transaction spool Completed");
+
         }
 
 

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Configuration;
 using DALContext.Services;
 using TmcOperationService;
+using DALContext.Model;
 
 namespace TmcSettler.ConsoleApp
 {
@@ -75,7 +76,31 @@ namespace TmcSettler.ConsoleApp
         {
 
 
-            string settle_batch = Settlement.GenerateBatch();
+            //Check for Time Processing 
+            if (DateTime.Now.Hour >2 && DateTime.Now.Hour < 4)
+            {
+                //Check if there is  a closed SettleBatch--- if Closed for the day, settlement has been completed.Assumed
+               // E_SETTLE_BATCH settle_batch = new E_SETTLE_BATCH();
+
+                var settle_batch = Settlement.GetSettleBatch();
+
+                if (settle_batch.CLOSED != "0")
+                {
+                   string batchID=  Settlement.SetSettleBatch();
+
+                    using (var db = new EtzbkDataContext())
+                    {
+                        db.Database.ExecuteSqlCommand("UPDATE E_SETTLEMENT_DOWNLOAD_BK SET TRANS_DATE<'" + DateTime.Today + "' AND SETTLE_BATCH ='" + batchID + "' WHERE SETTLE_BATCH IS NULL");
+                        db.Database.ExecuteSqlCommand("UPDATE E_SETTLE_BATCH SET CLOSED='1' WHERE BATCHID='"+ batchID+"'");
+                    }
+                   
+                    //Set settlebatch on strations with Settlebatch null and less than today's date
+                }
+
+            }
+            //
+
+           
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -105,9 +130,9 @@ namespace TmcSettler.ConsoleApp
             mastercardTrxThread.Start();
 
 
-            mastercardTrxThread.Join();
-            nonEtzCardThread.Join();
-            etzTrxThread.Join();
+            //mastercardTrxThread.Join();
+            //nonEtzCardThread.Join();
+            //etzTrxThread.Join();
 
             stopwatch.Stop();
 

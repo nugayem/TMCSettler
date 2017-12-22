@@ -19,11 +19,9 @@ namespace DALContext.Model
         public string CARD_NUM { get; set; }
         [MaxLength(30)]
         public string TRANS_NO { get; set; }
-
         public DateTime TRANS_DATE { get; set; }
         [MaxLength(200)]
         public string TRANS_DESCR { get; set; }
-
         public decimal TRANS_AMOUNT { get; set; }
         [StringLength(1)]
         public string TRANS_TYPE { get; set; }
@@ -41,22 +39,17 @@ namespace DALContext.Model
         [Index("ETRANSACTION_UNIQUE_TRANSID", IsUnique =true, IsClustered = false)]
         public string UNIQUE_TRANSID { get; set; }
         [StringLength(1)]
-
         public string REP_STATUS { get; set; }
         [StringLength(1)]
-
         public string INTSTATUS { get; set; }
-
+        public int SBATCHID { get; set; }
         [StringLength(1)]
-
         public string RECALC_BAL { get; set; }
         [MaxLength(40)]
         public string SERVICEID { get; set; }
         [StringLength(2)]
-
         public string CHANNELID { get; set; }
         [StringLength(2)]
-
         public string PROCESS_STATUS { get; set; }
         public decimal FEE { get; set; }
         [MaxLength(3)]
@@ -67,26 +60,18 @@ namespace DALContext.Model
         public string FEE_BATCH { get; set; }
         [MaxLength(20)]
         public string SETTLE_BATCH { get; set; }
-        [MaxLength(30)]
-        public string CARD_NUM_ACCT { get; set; }
-        [MaxLength(30)]
-        public string MERCHANT_CODE_ACCT { get; set; }
-        [StringLength(1)]
-
-        public string GFLAG { get; set; }
-
-        [MaxLength(15)]
-        public string SBATCH_NO_BK { get; set; }
         [MaxLength(25)]
         public string TRACK2 { get; set; }
-        [MaxLength(25)]
+        [MaxLength(40)]
         public string TRANS_CHECK { get; set; }
+        [MaxLength(50)]
+        public string SOURCE_IDENTIFIER { get; set; }
 
     }
 
 
 
-    public class E_SETTLEMENT_DOWNLOAD_BK
+    public class E_SETTLEMENT_DOWNLOAD_BK:  IHaveCustomMappings
     {
         [Key]
         public int GLOBALID { get; set; }
@@ -117,22 +102,17 @@ namespace DALContext.Model
         [Index("ESETTLEMENT_UNIQUE_TRANSID", IsUnique = true, IsClustered = false)]
         public string UNIQUE_TRANSID { get; set; }
         [StringLength(1)]
-
         public string REP_STATUS { get; set; }
         [StringLength(1)]
-
         public string INTSTATUS { get; set; }
         public decimal SBATCHID { get; set; }
         [StringLength(1)]
-
         public string RECALC_BAL { get; set; }
         [MaxLength(40)]
         public string SERVICEID { get; set; }
         [StringLength(2)]
-
         public string CHANNELID { get; set; }
         [StringLength(2)]
-
         public string PROCESS_STATUS { get; set; }
         public decimal FEE { get; set; }
         [MaxLength(3)]
@@ -157,8 +137,12 @@ namespace DALContext.Model
         public decimal SWITCH_FEE { get; set; }
         public decimal BANK_FEE { get; set; }
         [MaxLength(25)]
-        public string TRACK2 { get; set; }
+        public string TRACK2 { get; set; }// trans_check and source identifier
 
+        public void CreateMappings(IMapperConfigurationExpression configuration)
+        {
+            configuration.CreateMap<E_TRANSACTION, E_SETTLEMENT_DOWNLOAD_BK>(MemberList.None);
+        }
     }
 
     public class E_FEE_DETAIL_BK

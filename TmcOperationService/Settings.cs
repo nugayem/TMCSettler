@@ -15,6 +15,7 @@ namespace TmcOperationService
         public static readonly int number_of_record_perround;
         public static readonly int number_of_backlogdays;
         public static readonly string[] successKeys = new string[] { "00", "000" };
+        public static readonly string[] targets = new string[] {"FCMB","SKYE833NODE","SKYE","UNITYBANK","UNION","UBA","PMCBAXCHANGE-WALLET","DIAMOND","JAIZ_BANK","GTBANK","FIRSTBANK","PMCBAXCHANGE","ACCESS","WEMA","STANBIC","ECOBANK","ZENITHBANK","FIDELITY","KEYSTONE","ABMFB","SMARTMICRO","MASTERPASS","HERITAGE" };
         public static DateTime startdate;
         static Settings()
         {
@@ -22,17 +23,7 @@ namespace TmcOperationService
             number_of_backlogdays = int.Parse(ConfigurationManager.AppSettings["number_of_record_round"]);
             startdate = DateTime.Today.AddDays(-Settings.number_of_backlogdays);
         }
-
-
-        private static String Number2String(int number, bool isCaps)
-
-        {
-
-            Char c = (Char)((isCaps ? 65 : 97) + (number - 1));
-
-            return c.ToString();
-
-        }
+        
 
         public static void LoadSettings()
         {

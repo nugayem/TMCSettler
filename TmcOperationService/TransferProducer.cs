@@ -31,13 +31,13 @@ namespace TmcOperationService
         private void Producer()
         {
             EtzbkDataContext db = new EtzbkDataContext();
-            var etzTrx = db.E_TRANSACTION.Where(a => a.TRANS_CODE == "T").ToList();
+            List<E_TRANSACTION> etzTrx = db.E_TRANSACTION.Where(a => a.TRANS_CODE == "T" && (a.PROCESS_STATUS == "0" || a.PROCESS_STATUS == null)).Take(Settings.number_of_record_perround).ToList();
 
 
             Parallel.ForEach(etzTrx, item =>
             {
 
-                bool successful = CheckTransactionStatusOnTMC(item.UNIQUE_TRANSID, item.TRANS_CODE);
+                bool successful = DataManupulation.CheckTransactionStatusOnTMC(item.UNIQUE_TRANSID, item.TRANS_CODE);
 
                 if (successful)
                 {
@@ -50,8 +50,12 @@ namespace TmcOperationService
                 }
             });
 
-            enqueData.CompleteAdding();
 
+
+            enqueData.CompleteAdding();
+            DataManupulation.RemoveTransactionFromSettlement(itemsToRemove);
+            DataManupulation.UpdateTransactionAsProcccessed(etzTrx);
+            
         }
 
 
@@ -89,14 +93,5 @@ namespace TmcOperationService
             etzbk.SaveChanges();
         }
 
-
-
-        private static bool CheckTransactionStatusOnTMC(string UNIQUE_TRANSID, string TRANS_CODE)
-        {
-            bool value = true;
-            Console.WriteLine("Checking Transaction" + UNIQUE_TRANSID);
-            return value;
-
-        }
     }
 }

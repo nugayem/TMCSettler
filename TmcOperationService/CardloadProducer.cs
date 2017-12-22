@@ -32,14 +32,14 @@ namespace TmcOperationService
 
         private void Producer()
         {
-            EtzbkDataContext db = new EtzbkDataContext();
-            var etzTrx = db.E_TRANSACTION.Where(a => a.TRANS_CODE == "D").ToList();
+            EtzbkDataContext db = new EtzbkDataContext();            
+            List<E_TRANSACTION> etzTrx = db.E_TRANSACTION.Where(a => a.TRANS_CODE == "D" && (a.PROCESS_STATUS == "0" || a.PROCESS_STATUS == null)).Take(Settings.number_of_record_perround).ToList();
 
 
             Parallel.ForEach(etzTrx, item =>
             {
 
-                bool successful = CheckTransactionStatusOnTMC(item.UNIQUE_TRANSID, item.TRANS_CODE);
+                bool successful = DataManupulation.CheckTransactionStatusOnTMC(item.UNIQUE_TRANSID, item.TRANS_CODE);
 
                 if (successful)
                 {
@@ -54,6 +54,8 @@ namespace TmcOperationService
 
             enqueData.CompleteAdding();
 
+            DataManupulation.RemoveTransactionFromSettlement(itemsToRemove);
+            DataManupulation.UpdateTransactionAsProcccessed(etzTrx);
         }
 
 
@@ -88,26 +90,6 @@ namespace TmcOperationService
 
 
 
-        private static bool CheckTransactionStatusOnTMC(string UNIQUE_TRANSID, string TRANS_CODE)
-        {
-            bool value = false;
-            Console.WriteLine("Checking Transaction" + UNIQUE_TRANSID);
-
-            TmcDataContext tmcData = new TmcDataContext();
-            var reversed = tmcData.E_TMCREQUEST.Where(a => a.TRANS_DATA==UNIQUE_TRANSID && a.MTI == "0420").FirstOrDefault();
-            if (reversed != null)
-                return false;
-
-            var requestResp = tmcData.E_REQUESTLOG.Where(a => a.transid == UNIQUE_TRANSID).FirstOrDefault();
-            if (requestResp == null)
-                return false;
-
-            if (requestResp.response_code == "00")
-                return true;
-
-
-            return value;
-
-        }
+        
     }
 }
