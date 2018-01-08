@@ -59,18 +59,15 @@
   <ItemGroup>
     <Compile Include="DataContexts.cs" />
     <Compile Include="EFDbConfiguration.cs" />
-    <Compile Include="Migrations\201712170920184_adduniqueTouniTrnID.cs" />
-    <Compile Include="Migrations\201712170920184_adduniqueTouniTrnID.Designer.cs">
-      <DependentUpon>201712170920184_adduniqueTouniTrnID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712181933307_updateEtranzaction.cs" />
-    <Compile Include="Migrations\201712181933307_updateEtranzaction.Designer.cs">
-      <DependentUpon>201712181933307_updateEtranzaction.cs</DependentUpon>
+    <Compile Include="Migrations\201801081823056_fundGate.cs" />
+    <Compile Include="Migrations\201801081823056_fundGate.Designer.cs">
+      <DependentUpon>201801081823056_fundGate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\CommissionMapViewModel.cs" />
     <Compile Include="Model\EtzBKModel.cs" />
     <Compile Include="Model\EtzBKViewModel.cs" />
+    <Compile Include="Model\FundGateModel.cs" />
     <Compile Include="Model\TmcModel.cs" />
     <Compile Include="Model\TmcViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,11 +80,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201712170920184_adduniqueTouniTrnID.resx">
-      <DependentUpon>201712170920184_adduniqueTouniTrnID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712181933307_updateEtranzaction.resx">
-      <DependentUpon>201712181933307_updateEtranzaction.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201801081823056_fundGate.resx">
+      <DependentUpon>201801081823056_fundGate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -92,8 +92,8 @@ namespace DALContext.Model
         public string REFERENCE { get; set; }
         public string RESP_RESPONSE_CODE { get; set; }
         public string BANK_CODE { get; set; }
+        public string CURRENCY { get; set; }
 
-        
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<EtransactionViewModel, E_TRANSACTION>(MemberList.None);
@@ -119,4 +119,17 @@ namespace DALContext.Model
 
     }
 
+    public class ResponseViewModel
+    {
+        public ErrorType ErrorType { get; set; }
+        public string MerchantCode { get; set; }
+        public string Message { get; set; }
+        public bool Response { get; set; }
+        public string Other { get; set; }
+    }
+
+    public enum ErrorType
+    {
+        NoMerchantCode, NoSplitOnMerchant, InvalidSplitType, Valid, Exception
+    }
 }

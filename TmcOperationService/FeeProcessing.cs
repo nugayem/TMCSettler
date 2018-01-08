@@ -37,15 +37,19 @@ namespace TmcOperationService
             else
             {
                 int i = 1;
-                string bankCode = e_transaction.CARD_NUM.Substring(0, 3);
+                string bankCode;
+                if (e_transaction.CHANNELID == "09")
+                    bankCode=e_transaction.CARD_NUM.Substring(0, 6);
+                else
+                    bankCode = e_transaction.CARD_NUM.Substring(0, 3);
 
                 var items = from card in splitFormular
-                            where card.BANK_CODE == bankCode
+                            where card.BANK_CODE.StartsWith(bankCode)
                             orderby card.MAIN_FLAG
                             select card;
                 //Cehck Split is not configured for the Card, Pick the Defaul split
                 if (items.Count() == 0)
-                    items = splitFormular.Where(def => def.BANK_CODE == "000").OrderBy(a => a.MAIN_FLAG);
+                    items = splitFormular.Where(def => def.BANK_CODE == "000" || def.BANK_CODE=="000000" ).ToList().OrderBy(a => a.MAIN_FLAG);
                 foreach (var item in items)
                 {
                     decimal fee = 0;
@@ -58,6 +62,11 @@ namespace TmcOperationService
                     //    //
                     //else if (item.MAIN_FLAG == 1)
                     //    //
+
+                    var card_num = item.COMM_SUSPENCE == null || item.COMM_SUSPENCE.Trim() == "" ? bankCode + TransactionAlias.GetSuspenseAlias(e_transaction.TRANS_CODE) : item.COMM_SUSPENCE;
+                    var GFLAG = item.MAIN_FLAG.ToString();
+                    var MERCHANT_CODE = item.SPLIT_CARD.Contains("%") ? e_transaction.CARD_NUM.Substring(0, 3) + TransactionAlias.GetChannelAlias(e_transaction.CHANNELID.ToString()) + item.SPLIT_CARD.Substring(item.SPLIT_CARD.IndexOf("%") + 1) : item.SPLIT_CARD;
+
                     E_FEE_DETAIL_BK feeDetail = new E_FEE_DETAIL_BK()
                     {
                         CARD_NUM = item.COMM_SUSPENCE == null || item.COMM_SUSPENCE.Trim() == "" ? bankCode + TransactionAlias.GetSuspenseAlias(e_transaction.TRANS_CODE) : item.COMM_SUSPENCE,
@@ -177,8 +186,10 @@ namespace TmcOperationService
                 {
                     decimal fee = 0;
 
-
-                    fee = CalculateFeeBeneficiary(item.RATIO, e_transaction.FEE);
+                    if (e_transaction.FEE > 0)
+                        fee = CalculateFeeBeneficiary(item.RATIO, e_transaction.FEE);
+                    else
+                        fee = item.RATIO;
 
                     if (trans_amount < 0)
                         return new List<E_FEE_DETAIL_BK>();

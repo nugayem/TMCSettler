@@ -7,13 +7,13 @@ namespace DALContext.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.2-31219")]
-    public sealed partial class adduniqueTouniTrnID : IMigrationMetadata
+    public sealed partial class fundGate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(adduniqueTouniTrnID));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(fundGate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201712170920184_adduniqueTouniTrnID"; }
+            get { return "201801081823056_fundGate"; }
         }
         
         string IMigrationMetadata.Source

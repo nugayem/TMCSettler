@@ -20,6 +20,9 @@ namespace TmcSettlerWinService
         static void Main(string[] args)
         {
 
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+
+            currentDomain.UnhandledException +=  new UnhandledExceptionEventHandler( CurrentDomain_UnhandledException);
             //XmlConfigurator.Configure();
             Logger logger = new Logger();
             logger.LogInfoMessage("Starting Application");
@@ -52,6 +55,14 @@ namespace TmcSettlerWinService
 
             }
             catch(Exception ex) { logger.LogFatalMessage(ex.Message); }
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Logger logger = new Logger();
+            Exception ex = (Exception)e.ExceptionObject;
+            logger.LogInfoMessage("Unhandled Exception" +ex.StackTrace );
+
         }
     }
 

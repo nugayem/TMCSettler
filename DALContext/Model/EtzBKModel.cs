@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using System.ComponentModel;
 
 namespace DALContext.Model
 {
@@ -141,7 +142,9 @@ namespace DALContext.Model
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<E_TRANSACTION, E_SETTLEMENT_DOWNLOAD_BK>(MemberList.None);
+            configuration.CreateMap<E_TRANSACTION, E_SETTLEMENT_DOWNLOAD_BK>(MemberList.None)
+                .ForMember(o => o.BANK_FEE, opt => opt.Ignore())
+                .ForMember(o => o.SWITCH_FEE, opt => opt.Ignore());
         }
     }
 
@@ -315,7 +318,8 @@ namespace DALContext.Model
         public string LOGO { get; set; }
         [MaxLength(1)]
         public string CHARGE_TYPE { get; set; } 
-        public decimal CHARGES { get; set; }
+        
+        public decimal? CHARGES { get; set; }
         [MaxLength(3)]
         public string CAT_ID { get; set; }
         [MaxLength(3)]
@@ -326,17 +330,22 @@ namespace DALContext.Model
         public string CHANGE_PIN { get; set; }
         [MaxLength(1)]
         public string USER_LOCKED { get; set; }
+        
         public  decimal? PIN_MISSED { get; set; }
         public DateTime LAST_USED { get; set; }
         public DateTime MODIFIED { get; set; }
         public DateTime CREATED { get; set; }
         public DateTime ONLINE_DATE { get; set; }
+        
         public decimal? ONLINE_BALANCE { get; set; }
         public DateTime OFFLINE_DATE { get; set; }
-        public decimal OFFLINE_BALANCE { get; set; }
+        
+        public decimal? OFFLINE_BALANCE { get; set; }
         public int FEE_STATUS { get; set; }
-        public decimal FEE_RATIO { get; set; }
-        public decimal EXTRA_FEE { get; set; }
+        
+        public decimal? FEE_RATIO { get; set; }
+        
+        public decimal? EXTRA_FEE { get; set; }
         [MaxLength(1)]
         public string SPECIAL_SPLIT { get; set; }
         [MaxLength(100)]
@@ -437,8 +446,10 @@ namespace DALContext.Model
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<E_FUNDGATE_COMMISSION_SPLIT, CommissionMapViewModel>(MemberList.None)
+                .ForMember(o => o.BANK_CODE, opt => opt.MapFrom(d => d.CARD_NUM.Substring(0,6)))
                 .ForMember(o => o.COMM_SUSPENCE, opt => opt.MapFrom(d => d.CARD_NUM))
                 .ForMember(o => o.SPLIT_CARD, opt => opt.MapFrom(d => d.SPLIT_CARD))
+                .ForMember(o => o.MAIN_FLAG, opt => opt.MapFrom(d => int.Parse(d.PARTY_NO)))
                 .ForMember(o => o.SPLIT_DESCR, opt => opt.MapFrom(d => d.SPLIT_DESCR))
                 .ForMember(o => o.RATIO, opt => opt.MapFrom(d => d.RATIO)).ReverseMap();
         }
@@ -450,4 +461,47 @@ namespace DALContext.Model
         public int KEYID { get; set; }
     }
 
+    public class E_SWITCHIT_TRANSFORMER
+    {
+        public int ID { get; set; }
+
+        [MaxLength(20)]
+        public string CARD_NUM { get; set; }
+        [MaxLength(15)]
+        public string TERMINAL_ID { get; set; }
+        [MaxLength(20)]
+        public string TRANSFORM_CARD { get; set; }
+        [MaxLength(10)]
+        public string MERCHANT_CODE { get; set; }
+        [MaxLength(10)]
+        public string PROVIDER_ID { get; set; }
+        [MaxLength(3)]
+        public string TRANS_TYPE { get; set; }
+        [MaxLength(20)]
+        public string DSN_NAME { get; set; }
+
+    }
+
+    public class E_MERCHANT_CODE_INTERCEPT
+    {
+        public int ID { get; set; }
+        [MaxLength(20)]
+        public string CARD_NUM { get; set; }
+        [MaxLength(15)]
+        public string MERCHANT_CODE { get; set; }
+        [MaxLength(20)]
+        public string INTERCEPT_MERCHANT_CODE { get; set; }
+        [MaxLength(6)]
+        public string INITIATOR_CODE { get; set; }
+        [MaxLength(20)]
+        public string INTERCEPT_STATUS { get; set; }
+        [MaxLength(2)]
+        public string CHANNELID { get; set; }
+        [MaxLength(2)]
+        public string TRANS_CODE { get; set; }
+
+
+        public DateTime CREATED { get; set; } = DateTime.Now;
+    }
+    
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,19 @@ namespace LoggerHelper.Services
         public void LogWarnMessage(string message)
         {
             log.Warn(message); 
+        }
+    }
+
+    public class WrieToFiles
+    {
+        public static readonly Object obj =  new Object();
+        public static void WriteToFile (string fileName, string message)
+        {
+            lock (obj)
+            {
+                string path = ConfigurationManager.AppSettings["logPath"];
+                System.IO.File.AppendAllText(path + fileName, message + Environment.NewLine);
+            }
         }
     }
 }

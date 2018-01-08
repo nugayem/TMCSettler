@@ -16,6 +16,8 @@ namespace DALContext
 
             //SetSqlGenerator("MySql.Data.MySqlClient", new MySql.Data.Entity.MySqlMigrationSqlGenerator());
             DbConfiguration.SetConfiguration(new EFDbConfiguration(ConnectionFactory.DBType.MySql));
+            
+            this.Configuration.LazyLoadingEnabled = false;
             var objcontext = (this as IObjectContextAdapter).ObjectContext;
             objcontext.CommandTimeout = 300;
         }
@@ -23,6 +25,7 @@ namespace DALContext
         public TmcDataContext(string connectionString) : base(connectionString)
         {
             Database.Connection.ConnectionString = connectionString;
+
         }
         
 
@@ -48,8 +51,15 @@ namespace DALContext
 
         public EtzbkDataContext() : base("ETZBK130")
         {
-            DbConfiguration.SetConfiguration(new EFDbConfiguration(ConnectionFactory.DBType.SQLServer));
-           // Database.SetInitializer(new MigrateDatabaseToLatestVersion<SistemaContext, Sistema.DataAccess.Migrations.Configuration>());
+           //DbConfiguration.SetConfiguration(new EFDbConfiguration(ConnectionFactory.DBType.SQLServer));
+            // Database.SetInitializer(new MigrateDatabaseToLatestVersion<SistemaContext, Sistema.DataAccess.Migrations.Configuration>());
+
+            DbConfiguration.SetConfiguration(new EFDbConfiguration(ConnectionFactory.DBType.MySql));
+
+            this.Configuration.LazyLoadingEnabled = false;
+            var objcontext = (this as IObjectContextAdapter).ObjectContext;
+            objcontext.CommandTimeout = 300;
+
         }
 
         public EtzbkDataContext(string connectionString) : base(connectionString)
@@ -67,7 +77,8 @@ namespace DALContext
         public DbSet<E_SETTLEMENT_DOWNLOAD_BK> E_SETTLEMENT_DOWNLOAD_BK { get; set; }
         public DbSet<E_SETTLE_BATCH> E_SETTLE_BATCH { get; set; }
         public DbSet<E_FEEBATCH> E_FEEBATCH { get; set; }
-
+        public DbSet<E_SWITCHIT_TRANSFORMER> E_SWITCHIT_TRANSFORMER { get; set; }
+        public DbSet<E_MERCHANT_CODE_INTERCEPT> E_MERCHANT_CODE_INTERCEPT { get; set; }        
         public DbSet<E_FUNDGATE_COMMISSION_SPLIT> E_FUNDGATE_COMMISSION_SPLIT { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -80,6 +91,28 @@ namespace DALContext
         }
     }
 
+
+    public class FundGateDataContext : DbContext
+    {
+
+        public FundGateDataContext() : base("FundGate")
+        {
+            //DbConfiguration.SetConfiguration(new EFDbConfiguration(ConnectionFactory.DBType.SQLServer));
+            // Database.SetInitializer(new MigrateDatabaseToLatestVersion<SistemaContext, Sistema.DataAccess.Migrations.Configuration>());
+
+            DbConfiguration.SetConfiguration(new EFDbConfiguration(ConnectionFactory.DBType.MySql));
+
+            this.Configuration.LazyLoadingEnabled = false;
+            var objcontext = (this as IObjectContextAdapter).ObjectContext;
+            objcontext.CommandTimeout = 300;
+
+        }
+
+        public DbSet<FUNDGATE_REQUEST> FUNDGATE_REQUEST { get; set; }
+        public DbSet<FUNDGATE_RESPONSE> FUNDGATE_RESPONSE { get; set; }
+
+    }
+
     public class ConnectionFactory
     {
         public enum DBType
@@ -88,5 +121,6 @@ namespace DALContext
 
         }
     }
+    
 
 }

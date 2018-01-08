@@ -24,7 +24,7 @@ namespace TmcSettler.ConsoleApp
             Console.WriteLine(container.WhatDidIScan());
             var app = container.GetInstance<Application>();
             app.Run();
-            Console.ReadLine();
+
 
         }
     }
@@ -42,7 +42,7 @@ namespace TmcSettler.ConsoleApp
                 scan.AddAllTypesOf<IRunAtStartup>();
             });
 
-           // For<ILogger>().Use<Logger>();
+            For<ILogger>().Use<Logger>();
 
             AutoMapperConfig.Execute();
             // requires explicit registration; doesn't follow convention
@@ -53,7 +53,7 @@ namespace TmcSettler.ConsoleApp
 
     public class Application 
     {
-        private ILogger logger;
+        private Logger logger= new Logger();
         int number_of_record_perround = int.Parse(ConfigurationManager.AppSettings["number_of_record_perround"]);
         int number_of_backlogdays = int.Parse(ConfigurationManager.AppSettings["number_of_record_round"]);
         string[] successKeys = new string[] { "00", "000" };
@@ -61,9 +61,9 @@ namespace TmcSettler.ConsoleApp
 
         DateTime startdate;//= DateTime.Today.AddDays(-number_of_backlogdays);
 
-        public Application(ILogger logger)
+        public Application()
         {
-            this.logger = logger;
+           // this.logger = logger;
             this.startdate = DateTime.Today.AddDays(-number_of_backlogdays);
 
 
@@ -77,26 +77,27 @@ namespace TmcSettler.ConsoleApp
 
 
             //Check for Time Processing 
-            if (DateTime.Now.Hour >2 && DateTime.Now.Hour < 4)
+            if (DateTime.Now.Hour >=1 && DateTime.Now.Hour < 4)
             {
                 //Check if there is  a closed SettleBatch--- if Closed for the day, settlement has been completed.Assumed
                // E_SETTLE_BATCH settle_batch = new E_SETTLE_BATCH();
 
                 var settle_batch = Settlement.GetSettleBatch();
-
-                if (settle_batch.CLOSED != "0")
-                {
-                   string batchID=  Settlement.SetSettleBatch();
-
-                    using (var db = new EtzbkDataContext())
+                
+                    if (settle_batch.CLOSED == null || settle_batch==null)
                     {
-                        db.Database.ExecuteSqlCommand("UPDATE E_SETTLEMENT_DOWNLOAD_BK SET TRANS_DATE<'" + DateTime.Today + "' AND SETTLE_BATCH ='" + batchID + "' WHERE SETTLE_BATCH IS NULL");
-                        db.Database.ExecuteSqlCommand("UPDATE E_SETTLE_BATCH SET CLOSED='1' WHERE BATCHID='"+ batchID+"'");
-                    }
-                   
-                    //Set settlebatch on strations with Settlebatch null and less than today's date
-                }
+                        string batchID = Settlement.SetSettleBatch();
 
+                        using (var db = new EtzbkDataContext())
+                        {
+                        db.Database.ExecuteSqlCommand("UPDATE E_SETTLEMENT_DOWNLOAD_BK SET  SETTLE_BATCH ='" + batchID + "' WHERE SETTLE_BATCH IS NULL");
+                        db.Database.ExecuteSqlCommand("UPDATE E_FEE_DETAIL_BK SET  SETTLE_BATCH ='" + batchID + "' WHERE SETTLE_BATCH IS NULL");
+                        db.Database.ExecuteSqlCommand("UPDATE E_SETTLE_BATCH SET CLOSED='1' WHERE BATCH_ID='" + batchID + "'");
+                        }
+
+                        //Set settlebatch on strations with Settlebatch null and less than today's date
+                    }
+                
             }
             //
 
@@ -135,8 +136,17 @@ namespace TmcSettler.ConsoleApp
             //etzTrxThread.Join();
 
             stopwatch.Stop();
+            
 
 
+
+            logger.LogInfoMessage(nameof(TmcSettler) + "Instantiating TaskProducerConsumer  Threads ");
+            TaskProducerConsumer taskProducerConsumer = new TaskProducerConsumer();
+            Thread taskProducerConsumerThread = new Thread(new ThreadStart(taskProducerConsumer.Run));
+            logger.LogInfoMessage(nameof(TmcSettler) + "Starting the TaskProducerConsumer  Threads ");
+            taskProducerConsumerThread.Start();
+            //taskProducerConsumerThread.Join();
+            /*
             logger.LogInfoMessage(nameof(TmcSettler) + "Instantiating CardloadProducer  Threads ");
             CardloadProducer cardloadProducer = new CardloadProducer();
             Thread cardloadProducerThread = new Thread(new ThreadStart(cardloadProducer.Run));
@@ -157,8 +167,15 @@ namespace TmcSettler.ConsoleApp
             logger.LogInfoMessage(nameof(TmcSettler) + "Starting the PaymentProducer  Threads ");
             paymentProducerThread.Start();
 
+            paymentProducerThread.Join();
+            transferProducerThread.Join();
+            cardloadProducerThread.Join();
 
+            mastercardTrxThread.Join();
+            nonEtzCardThread.Join();
+            etzTrxThread.Join();
 
+*/
             Console.WriteLine("Round completed in "+ stopwatch.Elapsed);
             Console.ReadLine();
         }
