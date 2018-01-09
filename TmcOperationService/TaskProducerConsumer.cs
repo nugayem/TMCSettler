@@ -45,7 +45,7 @@ namespace TmcOperationService
         {
             enqueData = new BlockingCollection<E_TRANSACTION>();
             Task t1 = Task.Factory.StartNew(Producer);
-            Task t2 = Task.Factory.StartNew(Consumer);
+            Task t2 = Task.Factory.StartNew(Consumer); 
 
             List<Task> taskList = new List<Task> { t1, t2 };
             Task.WaitAll(taskList.ToArray());
@@ -134,6 +134,7 @@ namespace TmcOperationService
 
         }
 
+         
 
         private void Consumer()
 
