@@ -59,9 +59,9 @@
   <ItemGroup>
     <Compile Include="DataContexts.cs" />
     <Compile Include="EFDbConfiguration.cs" />
-    <Compile Include="Migrations\201801081823056_fundGate.cs" />
-    <Compile Include="Migrations\201801081823056_fundGate.Designer.cs">
-      <DependentUpon>201801081823056_fundGate.cs</DependentUpon>
+    <Compile Include="Migrations\201801091115447_ecarddb3.cs" />
+    <Compile Include="Migrations\201801091115447_ecarddb3.Designer.cs">
+      <DependentUpon>201801091115447_ecarddb3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\CommissionMapViewModel.cs" />
@@ -80,8 +80,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201801081823056_fundGate.resx">
-      <DependentUpon>201801081823056_fundGate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201801091115447_ecarddb3.resx">
+      <DependentUpon>201801091115447_ecarddb3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
