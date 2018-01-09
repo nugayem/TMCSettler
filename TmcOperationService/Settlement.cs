@@ -31,6 +31,30 @@ namespace TmcOperationService
                         if (merchantIntercept.CARD_NUM != null || merchantIntercept.CARD_NUM.Trim() != "")
                             item.CARD_NUM = merchantIntercept.CARD_NUM;
                     }
+
+                    if (item.CHANNELID == "09")
+                    {
+                        using (FundGateDataContext fundGate = new FundGateDataContext())
+                        {
+                            var fundGateQuery = from A in fundGate.FUNDGATE_RESPONSE
+                                                join B in fundGate.FUNDGATE_REQUEST
+                                                on new { X = A.clientRef, Y = A.terminal } equals new { X = B.clientRef, Y = B.terminal } into jointData
+                                                from joinRecord in jointData.DefaultIfEmpty()
+                                                where (joinRecord.action == "VT" && A.etzRef == item.UNIQUE_TRANSID)
+                                                select new
+                                                {
+                                                    joinRecord.lineType
+                                                };
+
+                            var fundGateTrx = fundGateQuery.FirstOrDefault();
+                            if (fundGateTrx != null)
+                            {
+                                var swicthData = etzbk.E_SWITCHIT_TRANSFORMER.Where(a => a.CARD_NUM == item.CARD_NUM && a.PROVIDER_ID == fundGateTrx.lineType).FirstOrDefault();
+                                item.CARD_NUM = swicthData.TRANSFORM_CARD;
+                                item.MERCHANT_CODE = swicthData.MERCHANT_CODE;
+                            }
+                        }
+                    }
                     string merchantCode = item.MERCHANT_CODE;
                     List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();
 
