@@ -111,7 +111,7 @@ namespace TmcOperationService
                                     TRANS_TYPE = "1",
                                     EXTERNAL_TRANSID = A.SWITCH_KEY,
                                     UNIQUE_TRANSID = A.TRANS_DATA,
-                                    FEE = A.FEE,
+                                    FEE = int.Parse(joinRecord.FEE.Substring(1))/100,
                                     CURRENCY = A.CURRENCY,
                                     REVERSAL_KEY = A.REVERSAL_KEY,
                                     TERMINAL_ID = A.TERMINAL_ID,
@@ -130,13 +130,13 @@ namespace TmcOperationService
                 {
 
                     Console.WriteLine("Exception from " + System.Reflection.MethodBase.GetCurrentMethod().Name + " " + ExceptionExtensions.GetFullMessage(ex));
-                    logger.LogDebugMessage(nameof(EtranzactChannelTransaction) + " " + ExceptionExtensions.GetFullMessage(ex));
+                    logger.LogDebugMessage(nameof(MastercardTransactions) + " " + ExceptionExtensions.GetFullMessage(ex));
 
                 }
             }
             Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name + " " + e_Transaction.Count());
             Console.WriteLine("Channel4 Completed");
-            logger.LogInfoMessage(nameof(EtranzactChannelTransaction) + " Channel4 Completed ");
+            logger.LogInfoMessage(nameof(MastercardTransactions) + " Channel4 Completed ");
 
             return e_Transaction;
         }

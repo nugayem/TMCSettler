@@ -63,13 +63,13 @@ namespace TmcOperationService
                 }
                 catch (SqlException ex)
                 {
-                    Console.WriteLine("SQLException from Channel 1 " + ExceptionExtensions.GetFullMessage(ex));
+                    Console.WriteLine("SQLException from NonEtzCardTransaction Run " + ExceptionExtensions.GetFullMessage(ex));
                     logger.LogInfoMessage("SQLException from Run " + nameof(NonEtzCardTransaction) + " " + ExceptionExtensions.GetFullMessage(ex));
 
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Exception from Channel 1 " + ExceptionExtensions.GetFullMessage(ex));
+                    Console.WriteLine("Exception from NonEtzCardTransaction run " + ExceptionExtensions.GetFullMessage(ex));
                     logger.LogInfoMessage("Exception from Run " + nameof(NonEtzCardTransaction) + " " + ExceptionExtensions.GetFullMessage(ex));
                 }
             }
@@ -133,7 +133,7 @@ namespace TmcOperationService
             }
             Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name + " " + e_Transaction.Count());
             Console.WriteLine("NonEtzCard1 Completed");
-            logger.LogInfoMessage(nameof(EtranzactChannelTransaction) + " NonEtzCard1 Completed ");
+            logger.LogInfoMessage(nameof(NonEtzCardTransaction) + " NonEtzCard1 Completed ");
 
             return e_Transaction;
 
@@ -184,7 +184,7 @@ namespace TmcOperationService
                 {
 
                     Console.WriteLine("Exception from " + System.Reflection.MethodBase.GetCurrentMethod().Name + " " + ExceptionExtensions.GetFullMessage(ex));
-                    logger.LogInfoMessage(nameof(EtranzactChannelTransaction) + " " + ExceptionExtensions.GetFullMessage(ex));
+                    logger.LogInfoMessage(nameof(NonEtzCardTransaction) + " " + ExceptionExtensions.GetFullMessage(ex));
 
                 }
             }

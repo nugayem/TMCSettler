@@ -45,13 +45,28 @@ namespace TmcOperationService
         {
             enqueData = new BlockingCollection<E_TRANSACTION>();
             Task t1 = Task.Factory.StartNew(Producer);
-            Task t2 = Task.Factory.StartNew(Consumer); 
+            Task t2 = Task.Factory.StartNew(Consumer);
 
             List<Task> taskList = new List<Task> { t1, t2 };
-            Task.WaitAll(taskList.ToArray());
 
+            //Task[] tasksArray = taskList.Where(t => t != null).ToArray();
+            //if (tasksArray.Length > 0) Task.WaitAll(tasksArray);
+
+            try
+            {
+                Task.WaitAll(taskList.ToArray());
+            }
+            catch ( Exception ex)
+            {
+                    Logger logger = new Logger();
+                  Console.WriteLine("Exception from TaskProducerConsumer Run " + ExceptionExtensions.GetFullMessage(ex));
+                    logger.LogInfoMessage("Exception from Run TaskProducerConsumer Procuder Method" + ExceptionExtensions.GetFullMessage(ex));
+
+                    return;
+               
+            }
             List<ErrorType> itemsList = responseList.Select(s => s.ErrorType).Distinct().ToList();
-            foreach(var item in itemsList)
+            foreach (var item in itemsList)
             {
                 List<string> list = responseList.Where(a => a.ErrorType == item).Select(a => a.MerchantCode).ToList();
                 if (item == ErrorType.Exception)
@@ -110,12 +125,11 @@ namespace TmcOperationService
                         if (successful)
                         {
                             enqueData.Add(item);
-                            Console.WriteLine("Equeued Data" + item.UNIQUE_TRANSID);
+                            Console.WriteLine("Equeued Data " + item.UNIQUE_TRANSID);
                         }
                         else
                         {
                             itemsToRemove.Add(item);
-                            logger.LogInfoMessage(nameof(TransferProducer) + " round saved to database ");
                         }
                     });
 
@@ -128,58 +142,81 @@ namespace TmcOperationService
                 {
                     Logger logger = new Logger();
                     Console.WriteLine("Exception from EtranzactChannelTransaction Run " + ExceptionExtensions.GetFullMessage(ex));
-                    logger.LogInfoMessage("Exception from Run " + nameof(TransferProducer) + " " + ExceptionExtensions.GetFullMessage(ex));
+                    logger.LogInfoMessage("Exception from Run TaskProducerConsumer Procuder Method" + ExceptionExtensions.GetFullMessage(ex));
                 }
             }
 
         }
 
-         
+
 
         private void Consumer()
 
         {
-            List<E_TRANSFER_COMMISSION_SPLIT> splitFormular = CachingProvider.GetCachedData<List<E_TRANSFER_COMMISSION_SPLIT>>("Transfer");
-            List<E_FUNDGATE_COMMISSION_SPLIT> fundGatesplitFormular = CachingProvider.GetCachedData<List<E_FUNDGATE_COMMISSION_SPLIT>>("FundGate");
 
-            List<CommissionMapViewModel> commission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(splitFormular);
-            List<CommissionMapViewModel> fundGatecommission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(fundGatesplitFormular);
-
-            
-
-            Task loadingTask2 = Task.Factory.StartNew(() =>
-            {
-                Parallel.ForEach(enqueData.GetConsumingEnumerable(), new ParallelOptions { MaxDegreeOfParallelism = Settings.settlementThreadNumber }, item =>
-                {
-                    switch (item.TRANS_CODE)
-                    {
-                        case "P":    
-                            var response = Settlement.ProcessPaymentSettlement(item);
-                            if (response.Response == false)
-                            {
-                                //object obj = new object();
-                                lock (responseList)
-                                {
-                                    if (responseList.Where(res => res.MerchantCode == response.MerchantCode).ToList().Count == 0)
-                                        responseList.Add(response);
-                                }
-                            }
-                                break;
-                        case "T":
-                            Settlement.ProcessTransferSettlement(item);
-                            break;
-                        case "D":
-                            Settlement.ProcessCardLoadSettlement(item);
-                            break;
-                        case "W":
-                            Settlement.ProcessCardLoadSettlement(item);
-                            break;
-                    }
-                });
-            });
-            
-        }         
         
+                List<E_TRANSFER_COMMISSION_SPLIT> splitFormular = CachingProvider.GetCachedData<List<E_TRANSFER_COMMISSION_SPLIT>>("Transfer");
+                List<E_FUNDGATE_COMMISSION_SPLIT> fundGatesplitFormular = CachingProvider.GetCachedData<List<E_FUNDGATE_COMMISSION_SPLIT>>("FundGate");
+
+                List<CommissionMapViewModel> commission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(splitFormular);
+                List<CommissionMapViewModel> fundGatecommission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(fundGatesplitFormular);
+
+
+            Logger logger = new Logger();
+            Task loadingTask2 = Task.Factory.StartNew(() =>
+                {
+                    Parallel.ForEach(enqueData.GetConsumingEnumerable(), new ParallelOptions { MaxDegreeOfParallelism = Settings.settlementThreadNumber }, item =>
+                    {
+                        try
+                        {
+                            logger.LogInfoMessage("Parrallel Entered with " +item.TRANS_CODE ); 
+                            switch (item.TRANS_CODE)
+                            {
+                                case "P":
+                                    logger.LogInfoMessage("PaymentEntered");
+                                    var response = Settlement.ProcessPaymentSettlement(item);
+                                    logger.LogInfoMessage("PaymentEntered with Response");
+                                    if (response.Response == false)
+                                    {
+                                        //object obj = new object();
+                                        lock (responseList)
+                                        {
+                                            if (responseList.Where(res => res.MerchantCode == response.MerchantCode).ToList().Count == 0)
+                                                responseList.Add(response);
+                                        }
+                                    }
+                                    break;
+                                case "T":
+                                    logger.LogInfoMessage("transfer Entered");
+                                    Settlement.ProcessTransferSettlement(item);
+                                    logger.LogInfoMessage("transfer Entered returned");
+                                    break;
+                                case "D":
+                                    logger.LogInfoMessage("CaredloadEntered");
+                                    Settlement.ProcessCardLoadSettlement(item);
+                                    logger.LogInfoMessage("CaredloadEntered and returned");
+                                    break;
+                                case "W":
+
+                                    logger.LogInfoMessage("Withdraw Entered");
+                                    Settlement.ProcessCardLoadSettlement(item);
+
+                                    logger.LogInfoMessage("Wihdraw Reyurned");
+                                    break;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Exception from TaskProducerConsumer Consumer Method " + ExceptionExtensions.GetFullMessage(ex));
+                            logger.LogInfoMessage("Exception from Run TaskProducerConsumer Consumer Method " + ExceptionExtensions.GetFullMessage(ex));
+
+                        }
+                    });
+                });
+            }
+           
+        
+
     }
      
 }

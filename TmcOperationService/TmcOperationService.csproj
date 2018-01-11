@@ -52,20 +52,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CardloadProducer.cs" />
     <Compile Include="DataManupulation.cs" />
     <Compile Include="EtranzactChannelTransaction.cs" />
     <Compile Include="FeeProcessing.cs" />
     <Compile Include="MailMessanger.cs" />
     <Compile Include="MastercardTransactions.cs" />
     <Compile Include="NonEtzCardTransaction.cs" />
-    <Compile Include="PaymentProducer.cs" />
     <Compile Include="ProducerWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Settlement.cs" />
     <Compile Include="TaskProducerConsumer.cs" />
-    <Compile Include="TransferProducer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DALContext\DALContext.csproj">

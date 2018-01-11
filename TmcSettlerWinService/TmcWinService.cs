@@ -90,60 +90,47 @@ namespace TmcWinServiceWinService
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+             
 
-            logger.LogInfoMessage(nameof(TmcWinService) + " Creating multithreading Threads to spool from TMC to ETZBK");
+            logger.LogInfoMessage(nameof(TmcWinService) + " starting TMC settler.....");
+            logger.LogInfoMessage(nameof(TmcWinService) + " Start Job schedule for ");
 
-            logger.LogInfoMessage(nameof(TmcWinService) + "  Instantiating EtranzactChannelTransaction  Threads ");
+            logger.LogInfoMessage(nameof(TmcWinService) + "Creating multithreading Threads to spool from 145 to e_transaction for each channel");
+
+
+            logger.LogInfoMessage(nameof(TmcWinService) + "Instantiating EtranzactChannelTransaction  Threads ");
             EtranzactChannelTransaction etzTrx = new EtranzactChannelTransaction();
             Thread etzTrxThread = new Thread(new ThreadStart(etzTrx.Run));
-            logger.LogInfoMessage(nameof(TmcWinService) + "  Starting the EtranzactChannelTransaction  Threads ");
+            logger.LogInfoMessage(nameof(TmcWinService) + "Starting the EtranzactChannelTransaction  Threads ");
             etzTrxThread.Start();
 
-            logger.LogInfoMessage(nameof(TmcWinService) + " Instantiating NonEtzCardTransaction  Threads ");
+            logger.LogInfoMessage(nameof(TmcWinService) + "Instantiating NonEtzCardTransaction  Threads ");
             NonEtzCardTransaction nonEtzCard = new NonEtzCardTransaction();
             Thread nonEtzCardThread = new Thread(new ThreadStart(nonEtzCard.Run));
-            logger.LogInfoMessage(nameof(TmcWinService) + " Starting the NonEtzCardTransaction  Threads ");
+            logger.LogInfoMessage(nameof(TmcWinService) + "Starting the NonEtzCardTransaction  Threads ");
             nonEtzCardThread.Start();
 
-            logger.LogInfoMessage(nameof(TmcWinService) + " Instantiating MastercardTransactions  Threads ");
+            logger.LogInfoMessage(nameof(TmcWinService) + "Instantiating MastercardTransactions  Threads ");
             MastercardTransactions mastercardTrx = new MastercardTransactions();
             Thread mastercardTrxThread = new Thread(new ThreadStart(mastercardTrx.Run));
-            logger.LogInfoMessage(nameof(TmcWinService) + " Starting the MastercardTransactions  Threads ");
+            logger.LogInfoMessage(nameof(TmcWinService) + "Starting the MastercardTransactions  Threads ");
             mastercardTrxThread.Start();
 
-
-            logger.LogInfoMessage(nameof(EtranzactChannelTransaction) + "  Waiting to Join Thread Completed ");
 
             //mastercardTrxThread.Join();
             //nonEtzCardThread.Join();
             //etzTrxThread.Join();
 
-
-            logger.LogInfoMessage(nameof(EtranzactChannelTransaction) + "   Joined ");
-
             stopwatch.Stop();
 
 
-            logger.LogInfoMessage(nameof(TmcWinService) + " Instantiating CardloadProducer  Threads ");
-            CardloadProducer cardloadProducer = new CardloadProducer();
-            Thread cardloadProducerThread = new Thread(new ThreadStart(cardloadProducer.Run));
-            logger.LogInfoMessage(nameof(TmcWinService) + " Starting the CardloadProducer  Threads ");
-            cardloadProducerThread.Start();
-
-            logger.LogInfoMessage(nameof(TmcWinService) + " Instantiating TransferProducer  Threads ");
-            TransferProducer transferdProducer = new TransferProducer();
-            Thread transferProducerThread = new Thread(new ThreadStart(transferdProducer.Run));
-            logger.LogInfoMessage(nameof(TmcWinService) + " Starting the TransferProducer  Threads ");
-            transferProducerThread.Start();
 
 
-
-            logger.LogInfoMessage(nameof(TmcWinService) + " Instantiating PaymentProducer  Threads ");
-            PaymentProducer paymentProducer = new PaymentProducer();
-            Thread paymentProducerThread = new Thread(new ThreadStart(paymentProducer.Run));
-            logger.LogInfoMessage(nameof(TmcWinService) + " Starting the PaymentProducer  Threads ");
-            paymentProducerThread.Start();
-
+            logger.LogInfoMessage(nameof(TmcWinService) + "Instantiating TaskProducerConsumer  Threads ");
+            TaskProducerConsumer taskProducerConsumer = new TaskProducerConsumer();
+            Thread taskProducerConsumerThread = new Thread(new ThreadStart(taskProducerConsumer.Run));
+            logger.LogInfoMessage(nameof(TmcWinService) + "Starting the TaskProducerConsumer  Threads ");
+            taskProducerConsumerThread.Start();
 
 
         }
