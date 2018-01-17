@@ -20,9 +20,13 @@ namespace TmcOperationService
 
             using (EtzbkDataContext etzbk = new EtzbkDataContext())
             {
+                //item = etzbk.E_TRANSACTION.Where(a => a.UNIQUE_TRANSID == "0327002364000289256353").FirstOrDefault();
+                if(item.UNIQUE_TRANSID.Contains("#"))
+                    item.UNIQUE_TRANSID = item.UNIQUE_TRANSID.Substring(0, item.UNIQUE_TRANSID.IndexOf("#") );
                 try
                 {
-                    var merchantIntercept = etzbk.E_MERCHANT_CODE_INTERCEPT.Where(a => a.INITIATOR_CODE == item.CARD_NUM.Substring(0, 3) && a.MERCHANT_CODE == item.MERCHANT_CODE && a.CHANNELID==item.CHANNELID && a.TRANS_CODE==item.TRANS_CODE&&a.INTERCEPT_STATUS=="1").FirstOrDefault();
+
+                    var merchantIntercept = etzbk.E_MERCHANT_CODE_INTERCEPT.Where(a => a.INITIATOR_CODE == item.CARD_NUM.Substring(0, 3) && a.MERCHANT_CODE == item.MERCHANT_CODE && a.CHANNELID == item.CHANNELID && a.TRANS_CODE == item.TRANS_CODE && a.INTERCEPT_STATUS == "1").FirstOrDefault();
 
                     if (merchantIntercept != null)
                     {
@@ -50,13 +54,17 @@ namespace TmcOperationService
                             if (fundGateTrx != null)
                             {
                                 var swicthData = etzbk.E_SWITCHIT_TRANSFORMER.Where(a => a.CARD_NUM == item.CARD_NUM && a.PROVIDER_ID == fundGateTrx.lineType).FirstOrDefault();
-                                item.CARD_NUM = swicthData.TRANSFORM_CARD;
-                                item.MERCHANT_CODE = swicthData.MERCHANT_CODE;
+                                if (swicthData != null)
+                                {
+                                    item.CARD_NUM = swicthData.TRANSFORM_CARD;
+                                    item.MERCHANT_CODE = swicthData.MERCHANT_CODE;
+                                }
                             }
                         }
                     }
                     string merchantCode = item.MERCHANT_CODE;
                     List<E_FEE_DETAIL_BK> feeDetailList = new List<E_FEE_DETAIL_BK>();
+                    E_SETTLEMENT_DOWNLOAD_BK e_settlement = AutoMapper.Mapper.Map<E_SETTLEMENT_DOWNLOAD_BK>(item);
 
                     var merchantScaleQuery = from A in etzbk.E_MERCHANT
                                              join B in etzbk.E_CATSCALE
@@ -77,80 +85,75 @@ namespace TmcOperationService
                     if (merchantScale == null)
                     {
                         response = new ResponseViewModel() { ErrorType = ErrorType.NoMerchantCode, MerchantCode = merchantCode, Response = false };
-                        return response;
-                        
+
+                        //return response;
+
                         ///Write Code to handle No Merchant Code or Split category configured
                     }
-                    if (merchantScale.SPECIAL_SPLIT == "0")
-                    {
-                        // Check If Fee is Charged if not, ignore and comparee value
-                        if (merchantScale.SCALE_TYPE == "1" & item.FEE == 0)
-                            item.FEE = FeeProcessing.CalculateFeeBeneficiary(merchantScale.SCALE_VALUE, item.TRANS_AMOUNT);
-                        var query = from A in etzbk.E_MERCHANT_COMMISSION_SPLIT
-                                    where (A.MERCHANT_CODE == item.MERCHANT_CODE)
-                                    select new CommissionMapViewModel
-                                    {
-                                        AGENT = "",
-                                        MAIN_FLAG = A.MAIN_FLAG,
-                                        SPLIT_CARD = A.SPLIT_CARD,
-                                        RATIO = A.RATIO,
-                                        SPLIT_DESCR = A.SPLIT_DESCR,
-                                        COMM_SUSPENCE = item.MERCHANT_CODE
-
-                                    };
-                        List<CommissionMapViewModel> commission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(query.ToList());
-
-                        var e_settlement = AutoMapper.Mapper.Map<E_SETTLEMENT_DOWNLOAD_BK>(item);
-
-                        feeDetailList = FeeProcessing.ProcessRatioPaymentSplit(item, commission);
-
-                        var e_Fee_detail = RemoveSettledFeeDetails(feeDetailList);
-                        etzbk.E_FEE_DETAIL_BK.AddRange(e_Fee_detail);
-                        
-                        decimal bankFee = feeDetailList.Where(fee => fee.MERCHANT_CODE.EndsWith("9999")).Select(FEE => FEE.TRANS_AMOUNT).FirstOrDefault();
-                        e_settlement.BANK_FEE = bankFee;
-                        if(!CheckSettledFee(e_settlement))
-                            etzbk.E_SETTLEMENT_DOWNLOAD_BK.Add(e_settlement);
-
-
-
-                    }
-                    else if (merchantScale.SPECIAL_SPLIT == "1")
-                    {
-                        var query = from A in etzbk.E_MERCHANT_SPECIAL_SPLIT
-                                    where (A.MERCHANT_CODE == item.MERCHANT_CODE)
-                                    select new CommissionMapViewModel
-                                    {
-                                        AGENT = "",
-                                        MAIN_FLAG = A.MAIN_FLAG,
-                                        SPLIT_CARD = A.SPLIT_CARD,
-                                        RATIO = A.SVALUE,
-                                        SPLIT_DESCR = A.SPLIT_DESCR,
-                                        COMM_SUSPENCE = item.MERCHANT_CODE
-
-                                    };
-
-                        List<CommissionMapViewModel> commission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(query.ToList());
-
-                        E_SETTLEMENT_DOWNLOAD_BK e_settlement = AutoMapper.Mapper.Map<E_SETTLEMENT_DOWNLOAD_BK>(item);
-
-                        feeDetailList = FeeProcessing.ProcessRatioPaymentSplit(item, commission);
-
-                        var e_Fee_detail = RemoveSettledFeeDetails(feeDetailList);
-                        etzbk.E_FEE_DETAIL_BK.AddRange(e_Fee_detail);
-
-                        decimal bankFee = feeDetailList.Where(fee => fee.MERCHANT_CODE.EndsWith("9999")).Select(FEE => FEE.FEE).FirstOrDefault();
-                        e_settlement.BANK_FEE = bankFee;
-
-                        if(!CheckSettledFee(e_settlement))
-                            etzbk.E_SETTLEMENT_DOWNLOAD_BK.Add(e_settlement);
-
-                    }
                     else
-                    {                        
-                        response = new ResponseViewModel() { ErrorType= ErrorType.InvalidSplitType, MerchantCode = merchantCode,  Response = false };
-                        return response;
+                    {
+                        List<CommissionMapViewModel> commission = new List<CommissionMapViewModel>();
+                        if (merchantScale.SPECIAL_SPLIT == "0")
+                        {
+                            // Check If Fee is Charged if not, ignore and comparee value
+                            if (merchantScale.SCALE_TYPE == "1" & item.FEE == 0)
+                                item.FEE = FeeProcessing.CalculateFeeBeneficiary(merchantScale.SCALE_VALUE, item.TRANS_AMOUNT);
+                            var query = from A in etzbk.E_MERCHANT_COMMISSION_SPLIT
+                                        where (A.MERCHANT_CODE == item.MERCHANT_CODE)
+                                        select new CommissionMapViewModel
+                                        {
+                                            AGENT = "",
+                                            MAIN_FLAG = A.MAIN_FLAG,
+                                            SPLIT_CARD = A.SPLIT_CARD,
+                                            RATIO = A.RATIO,
+                                            SPLIT_DESCR = A.SPLIT_DESCR,
+                                            COMM_SUSPENCE = item.MERCHANT_CODE
+
+                                        };
+                            commission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(query.ToList());
+
+                        }
+                        else if (merchantScale.SPECIAL_SPLIT == "1")
+                        {
+                             var query = from A in etzbk.E_MERCHANT_SPECIAL_SPLIT
+                                        where (A.MERCHANT_CODE == item.MERCHANT_CODE)
+                                        select new CommissionMapViewModel
+                                        {
+                                            AGENT = "",
+                                            MAIN_FLAG = A.MAIN_FLAG,
+                                            SPLIT_CARD = A.SPLIT_CARD,
+                                            RATIO = A.SVALUE,
+                                            SPLIT_DESCR = A.SPLIT_DESCR,
+                                            COMM_SUSPENCE = item.MERCHANT_CODE
+
+                                        };
+                            commission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(query.ToList());
+
+                        }
+                        else
+                        {
+                            response = new ResponseViewModel() { ErrorType = ErrorType.InvalidSplitType, MerchantCode = merchantCode, Response = false };
+                           // return response;
+                        }
+
+                        if(merchantScale.SPECIAL_SPLIT == "1" || merchantScale.SPECIAL_SPLIT == "0")
+                        {
+
+                            feeDetailList = FeeProcessing.ProcessRatioPaymentSplit(item, commission);
+
+                            var e_Fee_detail = RemoveSettledFeeDetails(feeDetailList);
+                            etzbk.E_FEE_DETAIL_BK.AddRange(e_Fee_detail);
+
+                            decimal bankFee = feeDetailList.Where(fee => fee.MERCHANT_CODE.EndsWith("9999")).Select(FEE => FEE.FEE).FirstOrDefault();
+                            e_settlement.BANK_FEE = bankFee;
+
+                        }
+
                     }
+
+
+                    if (!CheckSettledFee(e_settlement))
+                        etzbk.E_SETTLEMENT_DOWNLOAD_BK.Add(e_settlement);
 
                     item.PROCESS_STATUS = "1";
                     etzbk.E_TRANSACTION.Add(item);
@@ -163,9 +166,8 @@ namespace TmcOperationService
                 }
                 catch (Exception ex)
                 {
-
-                    Console.WriteLine("Exception from " + System.Reflection.MethodBase.GetCurrentMethod().Name + " " + nameof(Settlement) + " " + ExceptionExtensions.GetFullMessage(ex));
-                    logger.LogInfoMessage("Exception from Run " + nameof(Settlement) + " " + System.Reflection.MethodBase.GetCurrentMethod().Name + " " + ExceptionExtensions.GetFullMessage(ex));
+                    Console.WriteLine("Exception from " + System.Reflection.MethodBase.GetCurrentMethod().Name + " " + nameof(Settlement) + " " + ExceptionExtensions.GetFullMessage(ex) + item.UNIQUE_TRANSID);
+                    logger.LogInfoMessage("Exception from Run " + nameof(Settlement) + " " + System.Reflection.MethodBase.GetCurrentMethod().Name + " " + ExceptionExtensions.GetFullMessage(ex) + item.UNIQUE_TRANSID);
                     return new ResponseViewModel() { ErrorType=ErrorType.Exception, MerchantCode= item.UNIQUE_TRANSID , Message= ex.Message, Response = false };
                 }
 
@@ -398,5 +400,10 @@ namespace TmcOperationService
             return settle_batch;
         }
 
+    }
+
+    public enum SettleOption
+    {
+        Valid,Invalid, Skip
     }
 }

@@ -185,7 +185,8 @@ namespace TmcOperationService
                 foreach (var item in splitFormular.OrderBy(a => a.MAIN_FLAG))
                 {
                     decimal fee = 0;
-
+ try
+                    {
                     if (e_transaction.FEE > 0)
                         fee = CalculateFeeBeneficiary(item.RATIO, e_transaction.FEE);
                     else
@@ -197,39 +198,47 @@ namespace TmcOperationService
                     trans_amount = trans_amount - fee;
                     if (fee == 0)
                         fee = trans_amount;
+                   
+                        E_FEE_DETAIL_BK feeDetail = new E_FEE_DETAIL_BK()
+                        {
+                            CARD_NUM = item.COMM_SUSPENCE,
+                            CHANNELID = e_transaction.CHANNELID,
+                            CLOSED = "1",
+                            CURRENCY = e_transaction.CURRENCY,
+                            EXTERNAL_TRANSID = e_transaction.UNIQUE_TRANSID,
+                            UNIQUE_TRANSID = "C" + i.ToString() + e_transaction.UNIQUE_TRANSID,
+                            FEE = 0,
+                            FEE_BATCH = e_transaction.FEE_BATCH,
+                            GFLAG = item.MAIN_FLAG.ToString(),
+                            INTSTATUS = "2",
+                            ISSUER_CODE = e_transaction.CARD_NUM.Substring(0, 3),
+                            MERCHANT_CODE = item.SPLIT_CARD.Contains("%") ? e_transaction.CARD_NUM.Substring(0, 3) + TransactionAlias.GetChannelAlias(e_transaction.CHANNELID.ToString()) + item.SPLIT_CARD.Substring(item.SPLIT_CARD.IndexOf("%") + 1) : item.SPLIT_CARD,
+                            PROCESS_STATUS = "1",
+                            SUB_CODE = e_transaction.CARD_NUM.Substring(3, 3),
+                            SERVICEID = e_transaction.CARD_NUM.Substring(0, 6),
+                            SETTLE_BATCH = e_transaction.SETTLE_BATCH,
+                            TRANSID = e_transaction.TRANSID,
+                            TRANS_AMOUNT = fee,
+                            TRANS_CODE = "C",
+                            TRANS_DATE = DateTime.Now,
+                            TRANS_DESCR = "SETTLEMENT:;" + item.SPLIT_DESCR,
+                            TRANS_NO = e_transaction.TRANS_NO,
+                            TRANS_REF = e_transaction.MERCHANT_CODE,
+                            TRANS_TYPE = "1"
+                        };
 
-                    E_FEE_DETAIL_BK feeDetail = new E_FEE_DETAIL_BK()
+                        Console.WriteLine("Split transaction Trans_Code=" + e_transaction.TRANS_CODE + "  Merchant_Code : " + feeDetail.MERCHANT_CODE + " Card_num: " + feeDetail.CARD_NUM + " Descr " + feeDetail.TRANS_DESCR + " isssuer" + feeDetail.ISSUER_CODE + " unique_trans: " + feeDetail.UNIQUE_TRANSID + " Value: " + feeDetail.TRANS_AMOUNT);
+                        i++;
+
+                        feeDetailList.Add(feeDetail);
+                    }
+                    catch (Exception ex)
                     {
-                        CARD_NUM = item.COMM_SUSPENCE,
-                        CHANNELID = e_transaction.CHANNELID,
-                        CLOSED = "1",
-                        CURRENCY = e_transaction.CURRENCY,
-                        EXTERNAL_TRANSID = e_transaction.UNIQUE_TRANSID,
-                        UNIQUE_TRANSID = "C" + i.ToString() + e_transaction.UNIQUE_TRANSID,
-                        FEE = 0,
-                        FEE_BATCH = e_transaction.FEE_BATCH,
-                        GFLAG = item.MAIN_FLAG.ToString(),
-                        INTSTATUS = "2",
-                        ISSUER_CODE = e_transaction.CARD_NUM.Substring(0, 3),
-                        MERCHANT_CODE = item.SPLIT_CARD.Contains("%") ? e_transaction.CARD_NUM.Substring(0, 3) + TransactionAlias.GetChannelAlias(e_transaction.CHANNELID.ToString()) + item.SPLIT_CARD.Substring(item.SPLIT_CARD.IndexOf("%") + 1) : item.SPLIT_CARD,
-                        PROCESS_STATUS = "1",
-                        SUB_CODE = e_transaction.CARD_NUM.Substring(3, 3),
-                        SERVICEID = e_transaction.CARD_NUM.Substring(0, 6),
-                        SETTLE_BATCH = e_transaction.SETTLE_BATCH,
-                        TRANSID = e_transaction.TRANSID,
-                        TRANS_AMOUNT = fee,
-                        TRANS_CODE = "C",
-                        TRANS_DATE = DateTime.Now,
-                        TRANS_DESCR = "SETTLEMENT:;" + item.SPLIT_DESCR,
-                        TRANS_NO = e_transaction.TRANS_NO,
-                        TRANS_REF = e_transaction.MERCHANT_CODE,
-                        TRANS_TYPE = "1"
-                    };
+                        Console.WriteLine("Exception from " + System.Reflection.MethodBase.GetCurrentMethod().Name + " " + nameof(Settlement) + " " + ExceptionExtensions.GetFullMessage(ex) );
+                        //logger.LogInfoMessage("Exception from Run " + nameof(Settlement) + " " + System.Reflection.MethodBase.GetCurrentMethod().Name + " " + ExceptionExtensions.GetFullMessage(ex) + item.UNIQUE_TRANSID);
+                        return feeDetailList;
 
-                    Console.WriteLine("Split transaction Trans_Code=" + e_transaction.TRANS_CODE + "  Merchant_Code : " + feeDetail.MERCHANT_CODE + " Card_num: " + feeDetail.CARD_NUM + " Descr " + feeDetail.TRANS_DESCR + " isssuer" + feeDetail.ISSUER_CODE + " unique_trans: " + feeDetail.UNIQUE_TRANSID + " Value: " + feeDetail.TRANS_AMOUNT);
-                    i++;
-
-                    feeDetailList.Add(feeDetail);
+                    }
                 }
 
 

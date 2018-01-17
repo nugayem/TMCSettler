@@ -42,7 +42,7 @@ namespace TmcOperationService
 
                 try
                 {
-                    List<Task> taskList = new List<Task> { t1, t2, t3, t4, t5, t6, t7 };
+                    List<Task> taskList = new List<Task> { t1, t2, t3, t4, t5, t6, t7,t8 };
                     Task.WaitAll(taskList.ToArray());
                     Console.WriteLine("  EtranzactChannelTransaction Merged");
 
@@ -123,10 +123,10 @@ namespace TmcOperationService
                                     FEE = A.FEE,
                                     CURRENCY = A.CURRENCY,
                                     REVERSAL_KEY = A.TRANS_KEY,
-                                    REFERENCE = A.TRANS_SEQ,
+                                    TRANS_NO = A.TRANS_SEQ,
                                     TERMINAL_ID = A.TERMINAL_ID,
                                     CARD_SCHEME = A.CARD_SCHEME,
-                                    TRANS_NO = joinRecord.REFERENCE,
+                                    REFERENCE = joinRecord.REFERENCE,
                                     RESP_RESPONSE_CODE = joinRecord.RESPONSE_CODE
 
                                 };
@@ -173,7 +173,7 @@ namespace TmcOperationService
                                     TRANS_CODE = "T",
                                     CARD_NUM = A.PAN,
                                     TRANSID = joinRecord.REFERENCE == null || joinRecord.REFERENCE ==""? A.STAN : joinRecord.REFERENCE,
-                                    MERCHANT_CODE = A.CARD_ACC_ID,
+                                    MERCHANT_CODE = A.ACCT_ID2,
                                     TRANS_DESCR = A.CARD_ACC_NAME,
                                     RESPONSE_CODE = A.RESPONSE_CODE,
                                     TRANS_AMOUNT = A.AMOUNT,
@@ -229,7 +229,7 @@ namespace TmcOperationService
                                     TRANS_CODE = "T",
                                     CARD_NUM = A.PAN,
                                     TRANSID = joinRecord.REFERENCE == null || joinRecord.REFERENCE == "" ? A.STAN : joinRecord.REFERENCE,
-                                    MERCHANT_CODE = A.CARD_ACC_ID,
+                                    MERCHANT_CODE = A.ACCT_ID2,
                                     TRANS_DESCR = A.CARD_ACC_NAME,
                                     RESPONSE_CODE = A.RESPONSE_CODE,
                                     TRANS_AMOUNT = A.AMOUNT,
@@ -287,7 +287,7 @@ namespace TmcOperationService
                                     TRANS_CODE = "T",
                                     CARD_NUM = A.PAN,
                                     TRANSID = A.STAN,
-                                    MERCHANT_CODE = A.CARD_ACC_ID,
+                                    MERCHANT_CODE = A.ACCT_ID2,
                                     TRANS_DESCR = A.CARD_ACC_NAME,
                                     RESPONSE_CODE = A.RESPONSE_CODE,
                                     TRANS_AMOUNT = A.AMOUNT,
@@ -514,7 +514,7 @@ namespace TmcOperationService
                                     TRANS_CODE = "T",
                                     CARD_NUM = "700001HOMESEND00000",
                                     TRANSID = A.STAN,
-                                    MERCHANT_CODE = A.CARD_ACC_ID,
+                                    MERCHANT_CODE = A.ACCT_ID2,
                                     TRANS_DESCR = A.CARD_ACC_NAME,
                                     RESPONSE_CODE = A.RESPONSE_CODE,
                                     TRANS_AMOUNT = A.AMOUNT,

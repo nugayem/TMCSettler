@@ -83,8 +83,9 @@ namespace DALContext.Model
         public string TRANS_TYPE { get; set; }
         public string CHANNELID { get; set; }
         public string EXTERNAL_TRANSID { get; set; }
-        public string UNIQUE_TRANSID { get; set; }        
+        public string UNIQUE_TRANSID { get; set; }
         public decimal FEE { get; set; }
+        public string FEE2 { get; set; }
         public string REVERSAL_KEY { get; set; }
         public string TRANS_NO { get; set; }
         public string TERMINAL_ID { get; set; }

@@ -36,6 +36,9 @@ namespace TmcOperationService
                 {
                     var allTmcData = DataManupulation.MergeEntityList(new List<List<E_TRANSACTION>>() { t1.Result.ToList(), t2.Result.ToList(), t3.Result.ToList() });
 
+
+                    //PROCESS DATA
+                    
                     Console.WriteLine(" Merge All Data Spooled... Removing Duplicate record");
 
 
@@ -111,9 +114,10 @@ namespace TmcOperationService
                                     TRANS_TYPE = "1",
                                     EXTERNAL_TRANSID = A.SWITCH_KEY,
                                     UNIQUE_TRANSID = A.TRANS_DATA,
-                                    FEE = int.Parse(joinRecord.FEE.Substring(1))/100,
+                                    FEE = A.FEE,
+                                    FEE2 = joinRecord.FEE,
                                     CURRENCY = A.CURRENCY,
-                                    REVERSAL_KEY = A.REVERSAL_KEY,
+                                    REVERSAL_KEY = A.ACCT_ID1,
                                     TERMINAL_ID = A.TERMINAL_ID,
                                     CARD_SCHEME = A.PRO_CODE,
                                     RESP_RESPONSE_CODE = joinRecord.RESPONSE_CODE,
@@ -123,6 +127,44 @@ namespace TmcOperationService
 
                     var tmcreq = query.ToList().Take(Settings.number_of_record_perround);
 
+                    foreach(EtransactionViewModel item in tmcreq)
+                    {
+                        if(item.CARD_SCHEME.Substring(0,2) =="00")
+                        {
+                            item.TRANS_DESCR = "POS:" + item.REVERSAL_KEY + ':' + item.TRANSID + ':' + item.TERMINAL_ID + ':' + item.TRANS_DESCR;
+
+                            item.MERCHANT_CODE = "044MSTHLD4";
+                            item.TRANS_CODE = "P";
+                            item.CHANNELID = "03"; 
+                        }
+                        else if(item.CARD_SCHEME.Substring(0, 2) == "01")
+                        {
+                            item.TRANS_DESCR = "ATM WTHDRWL:" + item.REVERSAL_KEY + ':' + item.TRANSID + ':' + item.TERMINAL_ID + ':' + item.TRANS_DESCR;
+
+                            if (item.MERCHANT_CODE == "044MSTHLD1")
+                            {
+                                item.MERCHANT_CODE = "044MSTHLD3";
+                                item.TRANS_CODE = "P";
+                                item.CHANNELID = "04";
+                            }
+                            else if (item.MERCHANT_CODE != "044MSTHLD1" && item.TERMINAL_ID.Substring(0, 4) == "1044")
+                            {
+                                item.MERCHANT_CODE = "0443241211";
+                                item.TRANS_CODE = "W";
+                                item.CHANNELID = "04";
+                            }
+
+                            else if (item.MERCHANT_CODE != "044MSTHLD1" && item.TERMINAL_ID.Substring(0, 4) != "1044")
+                            {
+
+                                item.MERCHANT_CODE = "044MSTHLD3";
+                                item.TRANS_CODE = "P";
+                                item.CHANNELID = "04";
+                            }
+
+                            item.FEE = int.Parse(item.FEE2.Substring(1)) / 100;                            
+                        }
+                    }
 
                     e_Transaction = Mapper.Map<List<E_TRANSACTION>>(tmcreq);
                 }
@@ -183,6 +225,43 @@ namespace TmcOperationService
 
                     var tmcreq = query.ToList().Take(Settings.number_of_record_perround);
 
+                    foreach (EtransactionViewModel item in tmcreq)
+                    {
+                        if (item.CARD_SCHEME.Substring(0, 2) == "00")
+                        {
+                            item.TRANS_DESCR = "POS:" + item.REVERSAL_KEY + ':' + item.TRANSID + ':' + item.TERMINAL_ID + ':' + item.TRANS_DESCR;
+
+                            item.MERCHANT_CODE = "044MSTHLD4";
+                            item.TRANS_CODE = "P";
+                            item.CHANNELID = "03";
+                        }
+                        else if (item.CARD_SCHEME.Substring(0, 2) == "01")
+                        {
+                            item.TRANS_DESCR = "ATM WTHDRWL:" + item.REVERSAL_KEY + ':' + item.TRANSID + ':' + item.TERMINAL_ID + ':' + item.TRANS_DESCR;
+
+                            if (item.MERCHANT_CODE == "044MSTHLD1")
+                            {
+                                item.MERCHANT_CODE = "044MSTHLD3";
+                                item.TRANS_CODE = "P";
+                                item.CHANNELID = "04";
+                            }
+                            else if (item.MERCHANT_CODE != "044MSTHLD1" && item.TERMINAL_ID.Substring(0, 4) == "1044")
+                            {
+                                item.MERCHANT_CODE = "0443241211";
+                                item.TRANS_CODE = "W";
+                                item.CHANNELID = "04";
+                            }
+
+                            else if (item.MERCHANT_CODE != "044MSTHLD1" && item.TERMINAL_ID.Substring(0, 4) != "1044")
+                            {
+
+                                item.MERCHANT_CODE = "044MSTHLD3";
+                                item.TRANS_CODE = "P";
+                                item.CHANNELID = "04";
+                            } 
+                        }
+                    }
+
                     e_Transaction = Mapper.Map<List<E_TRANSACTION>>(tmcreq);
                 }
                 catch (Exception ex)
@@ -241,6 +320,45 @@ namespace TmcOperationService
 
 
                     var tmcreq = query.ToList().Take(Settings.number_of_record_perround);
+
+                    foreach (EtransactionViewModel item in tmcreq)
+                    {
+                        if (item.CARD_SCHEME.Substring(0, 2) == "00")
+                        {
+                            item.TRANS_DESCR = "POS:" + item.REVERSAL_KEY + ':' + item.TRANSID + ':' + item.TERMINAL_ID + ':' + item.TRANS_DESCR;
+
+                            item.MERCHANT_CODE = "044MSTHLD4";
+                            item.TRANS_CODE = "P";
+                            item.CHANNELID = "03";
+                        }
+                        else if (item.CARD_SCHEME.Substring(0, 2) == "01")
+                        {
+                            item.TRANS_DESCR = "ATM WTHDRWL:" + item.REVERSAL_KEY + ':' + item.TRANSID + ':' + item.TERMINAL_ID + ':' + item.TRANS_DESCR;
+
+                            if (item.MERCHANT_CODE == "044MSTHLD1")
+                            {
+                                item.MERCHANT_CODE = "044MSTHLD3";
+                                item.TRANS_CODE = "P";
+                                item.CHANNELID = "04";
+                            }
+                            else if (item.MERCHANT_CODE != "044MSTHLD1" && item.TERMINAL_ID.Substring(0, 4) == "1044")
+                            {
+                                item.MERCHANT_CODE = "0443241211";
+                                item.TRANS_CODE = "W";
+                                item.CHANNELID = "04";
+                            }
+
+                            else if (item.MERCHANT_CODE != "044MSTHLD1" && item.TERMINAL_ID.Substring(0, 4) != "1044")
+                            {
+
+                                item.MERCHANT_CODE = "044MSTHLD3";
+                                item.TRANS_CODE = "P";
+                                item.CHANNELID = "04";
+                            }
+                             
+                        }
+                    }
+
                     e_Transaction = Mapper.Map<List<E_TRANSACTION>>(tmcreq);
                 }
                 catch (Exception ex)

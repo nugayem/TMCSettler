@@ -35,6 +35,7 @@
     <StartupObject>TmcSettlerWinService.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -70,7 +71,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="log4net.config" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -84,7 +87,7 @@
       <Name>LoggerHelper</Name>
     </ProjectReference>
     <ProjectReference Include="..\TmcOperationService\TmcOperationService.csproj">
-      <Project>{3BB60715-8C66-4141-A087-01013BA8EFE0}</Project>
+      <Project>{3bb60715-8c66-4141-a087-01013ba8efe0}</Project>
       <Name>TmcOperationService</Name>
     </ProjectReference>
   </ItemGroup>
@@ -92,6 +95,10 @@
     <EmbeddedResource Include="ProjectInstaller.resx">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\CardLoadFee.xml" />
+    <Content Include="Data\TransferFee.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

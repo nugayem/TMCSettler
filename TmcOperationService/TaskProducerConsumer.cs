@@ -4,15 +4,17 @@ using LoggerHelper.Services;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TmcOperationService
 {
     public class TaskProducerConsumer
     {
-        private static BlockingCollection<E_TRANSACTION> enqueData;//= new BlockingCollection<E_Transaction>();
+        private  BlockingCollection<E_TRANSACTION> enqueData= new BlockingCollection<E_TRANSACTION>();
         private readonly static List<ResponseViewModel> responseList = new List<ResponseViewModel>();
         List<E_TRANSACTION> itemsToRemove = new List<E_TRANSACTION>();
         Logger logger = new Logger();
@@ -43,9 +45,20 @@ namespace TmcOperationService
 
         public void Run()
         {
+            logger.LogInfoMessage("Welcome to Task Producer Consure Runmethod");
+
+
+            //Thread t1 = new Thread(Producer);
+            //Thread t2 = new Thread(Consumer);
+            //t1.Start();
+            //t2.Start();
+
+            //t1.Join();
+            //t2.Join();
+
             enqueData = new BlockingCollection<E_TRANSACTION>();
-            Task t1 = Task.Factory.StartNew(Producer);
             Task t2 = Task.Factory.StartNew(Consumer);
+            Task t1 = Task.Factory.StartNew(Producer);
 
             List<Task> taskList = new List<Task> { t1, t2 };
 
@@ -58,9 +71,9 @@ namespace TmcOperationService
             }
             catch ( Exception ex)
             {
-                    Logger logger = new Logger();
+                  
                   Console.WriteLine("Exception from TaskProducerConsumer Run " + ExceptionExtensions.GetFullMessage(ex));
-                    logger.LogInfoMessage("Exception from Run TaskProducerConsumer Procuder Method" + ExceptionExtensions.GetFullMessage(ex));
+                    logger.LogInfoMessage("Exception from Run TaskProducerConsumer RUN Method" + ExceptionExtensions.GetFullMessage(ex));
 
                     return;
                
@@ -105,6 +118,7 @@ namespace TmcOperationService
 
 
             }
+
             Console.WriteLine("TaskProducerConsumer Round Complete");
         }
 
@@ -112,22 +126,28 @@ namespace TmcOperationService
         {
             using (EtzbkDataContext db = new EtzbkDataContext())
             {
+
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+
                 try
                 {
+
                     List<E_TRANSACTION> etzTrx = db.E_TRANSACTION.Where(a => a.PROCESS_STATUS == "0" || a.PROCESS_STATUS == null).ToList();
 
 
                     Parallel.ForEach(etzTrx, new ParallelOptions { MaxDegreeOfParallelism = Settings.settlementThreadNumber }, item =>
                     {
 
-                        bool successful = DataManupulation.CheckTransactionStatusOnTMC(item.UNIQUE_TRANSID, item.TRANS_CODE);
+                        SettleOption successful = DataManupulation.CheckTransactionStatusOnTMC(item.UNIQUE_TRANSID, item.TRANS_CODE);
 
-                        if (successful)
+                        if (successful.Equals(SettleOption.Valid))
                         {
                             enqueData.Add(item);
-                            Console.WriteLine("Equeued Data " + item.UNIQUE_TRANSID);
+                            Console.WriteLine("Equeued Data  " + item.UNIQUE_TRANSID);
+                            logger.LogInfoMessage("Equeued Data " + item.UNIQUE_TRANSID);
                         }
-                        else
+                        else if(successful.Equals(SettleOption.Invalid))
                         {
                             itemsToRemove.Add(item);
                         }
@@ -136,6 +156,7 @@ namespace TmcOperationService
 
                     enqueData.CompleteAdding();
                     DataManupulation.RemoveTransactionFromSettlement(itemsToRemove);
+
                     //DataManupulation.UpdateTransactionAsProcccessed(etzTrx);
                 }
                 catch (Exception ex)
@@ -144,6 +165,12 @@ namespace TmcOperationService
                     Console.WriteLine("Exception from EtranzactChannelTransaction Run " + ExceptionExtensions.GetFullMessage(ex));
                     logger.LogInfoMessage("Exception from Run TaskProducerConsumer Procuder Method" + ExceptionExtensions.GetFullMessage(ex));
                 }
+
+                stopwatch.Stop();
+
+
+                Console.WriteLine("Round completed in " + stopwatch.Elapsed);
+                Console.ReadLine();
             }
 
         }
@@ -162,20 +189,21 @@ namespace TmcOperationService
                 List<CommissionMapViewModel> fundGatecommission = AutoMapper.Mapper.Map<List<CommissionMapViewModel>>(fundGatesplitFormular);
 
 
-            Logger logger = new Logger();
-            Task loadingTask2 = Task.Factory.StartNew(() =>
-                {
+            
+
                     Parallel.ForEach(enqueData.GetConsumingEnumerable(), new ParallelOptions { MaxDegreeOfParallelism = Settings.settlementThreadNumber }, item =>
                     {
+                        logger.LogInfoMessage("Parallel produced word");
                         try
                         {
-                            logger.LogInfoMessage("Parrallel Entered with " +item.TRANS_CODE ); 
+
+                            Stopwatch stopwatch = new Stopwatch();
+                            stopwatch.Start();
+
                             switch (item.TRANS_CODE)
                             {
                                 case "P":
-                                    logger.LogInfoMessage("PaymentEntered");
                                     var response = Settlement.ProcessPaymentSettlement(item);
-                                    logger.LogInfoMessage("PaymentEntered with Response");
                                     if (response.Response == false)
                                     {
                                         //object obj = new object();
@@ -186,24 +214,21 @@ namespace TmcOperationService
                                         }
                                     }
                                     break;
-                                case "T":
-                                    logger.LogInfoMessage("transfer Entered");
-                                    Settlement.ProcessTransferSettlement(item);
-                                    logger.LogInfoMessage("transfer Entered returned");
+                                case "T": 
+                                    Settlement.ProcessTransferSettlement(item); 
                                     break;
-                                case "D":
-                                    logger.LogInfoMessage("CaredloadEntered");
-                                    Settlement.ProcessCardLoadSettlement(item);
-                                    logger.LogInfoMessage("CaredloadEntered and returned");
+                                case "D": 
+                                    Settlement.ProcessCardLoadSettlement(item); 
                                     break;
                                 case "W":
-
-                                    logger.LogInfoMessage("Withdraw Entered");
-                                    Settlement.ProcessCardLoadSettlement(item);
-
-                                    logger.LogInfoMessage("Wihdraw Reyurned");
+                                     
+                                   // Settlement.ProcessCardLoadSettlement(item);
+                                    
                                     break;
                             }
+
+                            stopwatch.Stop();
+                            logger.LogInfoMessage(item.UNIQUE_TRANSID+"Round Parallel Consumert in " + stopwatch.Elapsed);
                         }
                         catch (Exception ex)
                         {
@@ -212,8 +237,8 @@ namespace TmcOperationService
 
                         }
                     });
-                });
-            }
+            logger.LogInfoMessage("Parrallel exit with first");
+        }
            
         
 
